@@ -5,7 +5,22 @@
             30
         </session-timeout>
     </session-config>
+    
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
+  
+    <filter>
+    <filter-name>WebResourceOptimizer</filter-name>
+    <filter-class>
+      ro.isdc.wro.http.WroFilter
+    </filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>WebResourceOptimizer</filter-name>
+    <url-pattern>/wro/*</url-pattern>
+  </filter-mapping>
+
 </web-app>
+
