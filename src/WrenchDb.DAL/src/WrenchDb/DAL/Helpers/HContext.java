@@ -26,6 +26,7 @@ public class HContext {
     
     private   SessionFactory _sessionFactory;
 
+    private   Configuration _configuration;
     public static void Init(String path)  {
         try
         {
@@ -48,6 +49,7 @@ public class HContext {
            }
            //add entities
            
+           cfg.configure();
            if(_hContext.getProperties().containsKey("wdb.entitypackages"))               
            {
             String[] packages= _hContext.getProperties().getProperty("wdb.entitypackages").split(",");
@@ -60,14 +62,15 @@ public class HContext {
                         Set<Class<?>> entityList = reflections.getTypesAnnotatedWith(Entity.class );
                         for (Class<?> entity : entityList)
                         {
+                              Logger.getLogger(HContext.class.getName()).log(Level.INFO,entity.getName());
                             if(cfg.getClassMapping(entity.getName())==null)
                             cfg.addAnnotatedClass(entity);
                         }
                 }
             }
-            cfg.configure();
+            //
            }
-         
+          _hContext._configuration=cfg;
           _hContext.setSessionFactory( cfg.buildSessionFactory());
         
          } catch (Exception ex) 
@@ -80,7 +83,7 @@ public class HContext {
         if(_hContext==null)
         {
             try {
-                Init("wdb_db.properties");
+               Init("wdb_db.properties");
                 
                 
             } catch (Exception ex) {
@@ -95,10 +98,11 @@ public class HContext {
     {}
     
     public <T> T  Get(Class c,long entityId)   
-    {
-        
+    {        
        Session s=this._sessionFactory.openSession();
-       return (T)s.get(c, (Serializable)entityId);
+       T result= (T)s.get(c, (Serializable)entityId);
+       s.close();
+       return result;
       
     }
     public Boolean SaveOrUpdate(Object entity)
@@ -108,8 +112,11 @@ public class HContext {
         Boolean result=false;
        try
        {
-          result = SaveOrUpdate(entity); 
+           
+          SaveOrUpdate(s,entity); 
+          s.flush();
           t.commit();
+          return true;
        }
        catch(Exception ex)
        {
@@ -122,6 +129,7 @@ public class HContext {
        }
        return result;
     }
+    
     public Boolean SaveOrUpdate(Session s,Object entity)
     {
         try
@@ -158,6 +166,20 @@ public class HContext {
      */
     private void setSessionFactory(SessionFactory sessionFactory) {
         this._sessionFactory = sessionFactory;
+    }
+
+    /**
+     * @return the _configuration
+     */
+    public Configuration getConfiguration() {
+        return _configuration;
+    }
+
+    /**
+     * @param configuration the _configuration to set
+     */
+    private void setConfiguration(Configuration configuration) {
+        this._configuration = configuration;
     }
     
     

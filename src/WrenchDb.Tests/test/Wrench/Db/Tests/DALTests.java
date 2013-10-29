@@ -7,6 +7,8 @@ package Wrench.Db.Tests;
 import WrenchDb.DAL.Entities.WdbApplication;
 import WrenchDb.DAL.Helpers.HContext;
 import java.io.IOException;
+import java.util.Date;
+import javax.xml.ws.spi.http.HttpContext;
 import org.hibernate.Session;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -38,13 +40,17 @@ public class DALTests {
     {
        InitHContext();
         WdbApplication app= new WdbApplication();
-        app.setApplicationHostname(22);
-        app.setApplicationName("testApp");
         
+        app.setApplicationHostname("app.host.loc2");
+        app.setApplicationName("testApp2"+(new Date()).toString());
+  
          HContext.Current().SaveOrUpdate(app);
-        
+         
+       // Session s= HContext.Current().SaveOrUpdate()
        WdbApplication appedit=  HContext.Current().<WdbApplication>Get(WdbApplication.class,app.getApplicationId());
-        
+        appedit.setApplicationHostname(app.getApplicationHostname()+"_MOD");
+        appedit.setApplicationName(app.getApplicationName()+"_MOD");
+        HContext.Current().SaveOrUpdate(appedit);
      
     }
     
