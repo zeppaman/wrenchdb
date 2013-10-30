@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+       
+
+          <h1>DEFAULT</h1> 
+
+            $Model.getModelName() is great!
+            
+  <a href='$Model.get("link")' >Link</a> 
+
+<table>
+           #set ($map = $Model.getProperties() )
+        #foreach ($mapEntry in $map.entrySet())
+           <tr><td>$mapEntry.key</td>
+            <td><value>$mapEntry.value</td></tr>
+        #end
+
+   </table>
+
+    </body>
+</html>
