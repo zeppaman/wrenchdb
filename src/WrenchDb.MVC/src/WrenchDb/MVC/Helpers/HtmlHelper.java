@@ -22,7 +22,8 @@ import org.apache.velocity.exception.ResourceNotFoundException;
  */
 public class HtmlHelper {
     
-    
+    public static   String ViewFilePathTemplateCustom="wdb/custom/Views/%s.vm";
+    public static   String ViewFilePathTemplate="wdb/default/Views/%s.vm";
     
     public static void RenderView(String ViewName,ModelBase model, PrintWriter writer,ServletContext scontext)
     {
@@ -30,10 +31,8 @@ public class HtmlHelper {
           try
         {
             Properties p= new Properties();
-            p.setProperty("resource.loader", "file");
-            p.setProperty("webapp.resource.loader.class", "org.apache.velocity.tools.view.WebappResourceLoader");
-            p.setProperty("webapp.resource.loader.path", "/WEB-INF/Views/");
-             p.setProperty("file.resource.loader.path", scontext.getRealPath("/WEB-INF"));
+            p.setProperty("resource.loader", "file");         
+            p.setProperty("file.resource.loader.path", scontext.getRealPath("/WEB-INF"));
             Velocity.init(p);
             
           
@@ -45,24 +44,42 @@ public class HtmlHelper {
         
             context.put("Model",model);
 
-           String templateFile="Views/"+ViewName+".vm";
+           String templateFile=String.format(ViewFilePathTemplateCustom,ViewName);
             
            Template template =  null;
 
             try
             {
                 template = Velocity.getTemplate(templateFile);
-            }
-            catch( ResourceNotFoundException rnfe )
-            {
+                // fallback on default template
               
-                  Logger.getLogger(HtmlHelper.class.getName()).log(Level.SEVERE, "Example : error : cannot find template " + templateFile, rnfe);
             }
-            catch( ParseErrorException pee )
+             catch( ParseErrorException pee )
             {
                        Logger.getLogger(HtmlHelper.class.getName()).log(Level.SEVERE, "Example : error : cannot PARSE template " + templateFile, pee);
       
             }
+            catch( Exception err )
+            {  
+               Logger.getLogger(HtmlHelper.class.getName()).log(Level.SEVERE, "Example : error : UNABLE TO FIND template  OR ERRROR: FALLBACK TO DEFAULT EQUIVALENT" + templateFile, err);
+      
+                 try
+                {
+                     templateFile=String.format(ViewFilePathTemplate,ViewName);
+                     template=Velocity.getTemplate(templateFile);
+                }
+                catch( ResourceNotFoundException rnfe2 )
+                {
+                    
+                       Logger.getLogger(HtmlHelper.class.getName()).log(Level.SEVERE, "Example : error : cannot FIND template " + templateFile, rnfe2);
+      
+                }
+                 catch(Exception ex)
+                 {
+                     throw ex;
+                 }
+            }
+           
 
             /*
              *  Now have the template engine process your template using the
@@ -82,7 +99,8 @@ public class HtmlHelper {
         }
         catch( Exception e )
         {
-            System.out.println(e);
+                Logger.getLogger(HtmlHelper.class.getName()).log(Level.SEVERE, "Example : error : cannot RENDER VIEW  " + ViewName, e);
+      
         }
     }
 

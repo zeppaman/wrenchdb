@@ -6,11 +6,19 @@ package WrenchDb.MVC.Configuration;
 
 import WrenchDb.Core.Configuration.*;
 import WrenchDb.MVC.BaseClasses.RuleMatchingResult;
+import org.apache.commons.lang.StringUtils;
 import org.reflections.Configuration;
 
 
-public class RouteMapSet extends ReflectionBasedConfiguration<RouteMap> 
+public class RouteMapSet 
+    extends ItemAppendingConfigurationContainer<RouteMap> 
 {
+    
+    @Override
+    public String getName() {
+       return "RouteMapSet";
+    }
+    
      @Override
     public Class<?> GetType()
     {
@@ -69,6 +77,13 @@ public class RouteMapSet extends ReflectionBasedConfiguration<RouteMap>
        String[] tokensUrl=url.split("/",-1);
        String[] tokensRule=r.getUrl().split("/",-1);
        
+       if(tokensUrl.length!=tokensRule.length)
+       {
+           result.IsMatching=false;
+           return result;
+       
+       }
+           
        boolean perfectMatch=true;
        String tmpKey="";
        for(int i=0;i<tokensUrl.length;i++)
@@ -82,7 +97,7 @@ public class RouteMapSet extends ReflectionBasedConfiguration<RouteMap>
                }
                else
                {
-                   perfectMatch &= tokensRule[i].equalsIgnoreCase(tokensUrl[0]);
+                   perfectMatch &= tokensRule[i].equalsIgnoreCase(tokensUrl[i]);
                }
            }
            else
@@ -94,31 +109,27 @@ public class RouteMapSet extends ReflectionBasedConfiguration<RouteMap>
        {
            result.ControllerName=(String)result.ModelData.get("controller");
        }
-       else
-       {
-           result.IsMatching=false;
-       }
+       
        
        if(result.ModelData.containsKey("action"))
        {
            result.ActionName=(String)result.ModelData.get("action");
        }
-       else
-       {
-           result.IsMatching=false;
-       }
+      
        
        //apply default settings
        if( result.IsMatching)
        {
-           if(result.ActionName.equalsIgnoreCase("default"))
+           if(StringUtils.isBlank(result.ActionName) || result.ActionName.equalsIgnoreCase("default"))
                result.ActionName=r.getDefaultActionName();
-            if(result.ControllerName.equalsIgnoreCase("default"))
+            if(StringUtils.isBlank(result.ControllerName) || result.ControllerName.equalsIgnoreCase("default"))
                result.ControllerName=r.getDefaultControllerName();
        }
        
   
        return result;
     }
+
+    
     
 }

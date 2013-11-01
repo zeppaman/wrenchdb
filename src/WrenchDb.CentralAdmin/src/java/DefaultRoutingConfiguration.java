@@ -5,14 +5,16 @@
 
 
 
-import WrenchDb.MVC.Annotations.RouteMapConfiguration;
+
+import WrenchDb.Core.Annotations.ItemAppenderConfigurator;
+import WrenchDb.Core.Configuration.ItemAppendingConfiguration;
 import WrenchDb.MVC.BaseClasses.RoutingConfiguration;
 import WrenchDb.MVC.Configuration.RouteMap;
 import java.util.ArrayList;
 
-@RouteMapConfiguration
+@ItemAppenderConfigurator(Name = "RouteMapSet")
 public class DefaultRoutingConfiguration 
-    extends  RoutingConfiguration {
+    extends  ItemAppendingConfiguration<RouteMap> {
 
             @Override
             public void Configure(ArrayList<RouteMap> configuration)
