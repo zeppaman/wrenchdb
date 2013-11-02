@@ -29,21 +29,21 @@ implements JSONRenderizzable,NamedItem {
 
     @Override
     public void RenderAsJSON(JSONRenderer jre) {
-      jre.AppendProperty("name", this._name);
-      jre.AppendProperty("index", this._name);
+      jre.AppendProperty("name", this.Name);
+      jre.AppendProperty("index", this.Name);
       jre.AppendProperty("hidden", this.Hidden);
       jre.AppendProperty("key", this.IsPrimaryKey);
       jre.AppendProperty("header", this.Header);
       jre.AppendProperty("width", this.Width);
     }
     
-    private String _name="";
+    public String Name="";
     @Override
     public String getName() {
-        return _name;
+        return Name;
     }
     public void setName(String value) {
-         _name=value;
+         Name=value;
     }
     
 }

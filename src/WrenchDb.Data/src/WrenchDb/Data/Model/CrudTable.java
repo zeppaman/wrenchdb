@@ -86,7 +86,7 @@ implements JSONRenderizzable, NamedItem, HtmlRenderizzable {
       jre.StartArrayProperty("rowList");
       for(Integer pageItemsCount : this.RowCountList)
       {
-          jre.AppendValue(pageItemsCount);
+          jre.AppendProperty(null,pageItemsCount);
       }
       jre.EndArrayProperty();
       //COL MODEL
@@ -98,7 +98,7 @@ implements JSONRenderizzable, NamedItem, HtmlRenderizzable {
       
         for(CrudTableColumn ct :_columns )
         {
-            jre.AppendValue(ct.getName());
+            jre.AppendProperty(null,ct.getName());
         }
       jre.EndArrayProperty(); //Ends ColNames
       

@@ -23,7 +23,8 @@ public class JSONHelper {
         System.err.println("sdsd"+cname+" "+Value.toString());
        switch(cname)
        {
-            case "java.lang.String": literalValue="\""+Value.toString().replace("\"", "\\\"") +"\"";
+            case "java.lang.String": literalValue="\""+Value.toString().replace("\"", "\\\"") +"\""; 
+            break;
             case "java.lang.Double": literalValue=Value.toString() ;
             break;
             case "java.lang.Float": literalValue=Value.toString() ;
@@ -39,7 +40,7 @@ public class JSONHelper {
                 break;
             
            default:
-               literalValue=Value.toString();
+               literalValue="\""+Value.toString()+"\"";
        }
        return literalValue;
     }

@@ -6,6 +6,9 @@
 package WrenchDb.Core.Configuration;
 
 
+import WrenchDb.Core.Helpers.ReflectionHelper;
+import WrenchDb.Core.Helpers.WdbStringHelper;
+import WrenchDb.Core.Interfaces.NamedItem;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.TypeVariable;
@@ -25,11 +28,12 @@ import org.reflections.util.ConfigurationBuilder;
  */
 public abstract class AnnotationBasedConfiguration<ObjectType>   {
     
-
+    private boolean _inited=false;
     private  ArrayList<ObjectType> items= new ArrayList<ObjectType>();
    
     
     public abstract  Class<? extends Annotation> GetAnnotationMarker();
+    
     
     
     public void LoadItems()
@@ -37,15 +41,9 @@ public abstract class AnnotationBasedConfiguration<ObjectType>   {
        
         setItems(new ArrayList<ObjectType>());
       
-        List<ClassLoader> classLoadersList = new LinkedList<ClassLoader>();
-        classLoadersList.add(ClasspathHelper.contextClassLoader());
-        classLoadersList.add(ClasspathHelper.staticClassLoader());
+
        
-      
-        Reflections reflections = new Reflections( new ConfigurationBuilder()
-        .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[0]))));
-       
-        Set<Class<?>> configs = reflections.getTypesAnnotatedWith( GetAnnotationMarker());
+        Set<Class<?>> configs = ReflectionHelper.getTypesAnnotatedWith( GetAnnotationMarker());
         for (Class<?> item : configs)
         {
        
@@ -65,10 +63,30 @@ public abstract class AnnotationBasedConfiguration<ObjectType>   {
         }
     }
 
+    public ObjectType GetByName(String Name)
+    {
+        if(WdbStringHelper.isBlank(Name)) return  null;
+        for(ObjectType o : this.items)
+        {
+            if(o instanceof NamedItem)
+            {
+                if(Name.equalsIgnoreCase(((NamedItem)o).getName()))
+                {
+                    return o;
+                }
+            }
+        }
+        return null;
+    }
+    
     /**
      * @return the items
      */
     public ArrayList<ObjectType> getItems() {
+         if(!_inited)
+        {
+            LoadItems();
+        }
         return items;
     }
 

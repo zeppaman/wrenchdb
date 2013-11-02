@@ -87,7 +87,7 @@ public class JSONRenderer {
         }
     }
 
-    public void AppendValue(Object Value) {
+    private void AppendValue(Object Value) {
          sb.append( JSONHelper.ConvertBaseType(Value));
     }
 }
