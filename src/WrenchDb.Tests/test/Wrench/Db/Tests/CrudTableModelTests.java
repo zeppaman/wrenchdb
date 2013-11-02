@@ -3,12 +3,16 @@
  * and open the template in the editor.
  */
 package Wrench.Db.Tests;
-
+import WrenchDb.Core.Classes.HtmlRenderer;
+import WrenchDb.Core.Helpers.JSONHelper;
+import WrenchDb.Core.Helpers.JSONRenderer;
 import WrenchDb.Core.Helpers.WdbStringHelper;
 import WrenchDb.DAL.Entities.WdbApplication;
 import WrenchDb.DAL.Helpers.HContext;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.xml.ws.spi.http.HttpContext;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
@@ -18,23 +22,21 @@ import static org.junit.Assert.*;
  *
  * @author d.fontani
  */
-public class UtilTests {
-      @Test
-    public void TestSplit()
+public class CrudTableModelTests {
+   
+    @Test
+    public void RenderColumnJSON()
     {
-        String test="/a/b/c/d/e/f";
-       // String[] splitted=test.split("/",-1);        
-        // assertSame(6, splitted.length);
-       String[]  splitted=WdbStringHelper.split(test, "/");
-         assertSame(6, splitted.length);
-        
     }
-        @Test
-    public void StringReplace()
+    
+    @Test
+    public void RenderTableJSON()
     {
-      String  literalValue="aaaa\"ss\"ss";
-      String escapedValue=literalValue.replace("\"", "\\\"");
-      assertEquals("aaaa\\\"ss\\\"ss", escapedValue);
     }
+     
+    @Test
+    public void RenderTableHtml()
+    {
+    }
+     
 }
-

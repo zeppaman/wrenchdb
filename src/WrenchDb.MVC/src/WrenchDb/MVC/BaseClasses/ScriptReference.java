@@ -4,7 +4,7 @@
  */
 package WrenchDb.MVC.BaseClasses;
 
-import WrenchDb.MVC.Interfaces.HtmlRenderizzable;
+import WrenchDb.Core.Interfaces.HtmlRenderizzable;
 import WrenchDb.Core.Classes.HtmlRenderer;
 
 /**

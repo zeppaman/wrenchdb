@@ -2,17 +2,18 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package WrenchDb.MVC.Interfaces;
+package WrenchDb.Core.Interfaces;
 
 import WrenchDb.Core.Classes.HtmlRenderer;
+import WrenchDb.Core.Helpers.JSONRenderer;
 
 /**
  *
  * @author d.fontani
  */
-public interface  HtmlRenderizzable {
+public interface JSONRenderizzable {
     
-    public String RenderAsHtml();
+    public String RenderAsJSON();
     
-    public void RenderAsHtml(HtmlRenderer sb);
+    public void RenderAsJSON(JSONRenderer sb);
 }
