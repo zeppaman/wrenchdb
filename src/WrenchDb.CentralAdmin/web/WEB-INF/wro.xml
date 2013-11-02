@@ -3,10 +3,21 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.isdc.ro/wro wro.xsd">
 
-  <group name="g1">
-    <css>classpath:g1.css</css>
-   <css>classpath:WrenchDb/Resources/Javascript/jqgrid/*.css</css>
+    
+  <!-- custom css -->
 
+  <group name="WdbCustomCss">
+   <css>classpath:g1.css</css>
+   <css>classpath:WrenchDb/Resources/Javascript/jqgrid/*.css</css>
   </group>
+
+    <!-- custom js -->
+
+  <group name="WdbCustomCss2">
+   <css>classpath:g1.css</css>
+   <css>classpath:WrenchDb/Resources/Javascript/jqgrid/*.css</css>
+  </group>
+
+  <import>classpath:WrenchDb/Resources/Configuration/wro_wdb.xml</import>
 
 </groups>

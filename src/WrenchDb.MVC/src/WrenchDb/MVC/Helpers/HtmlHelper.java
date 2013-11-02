@@ -4,7 +4,7 @@
  */
 package WrenchDb.MVC.Helpers;
 
-import WrenchDb.MVC.BaseClasses.ModelBase;
+import WrenchDb.MVC.BaseClasses.Model.ModelBase;
 import java.io.PrintWriter;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -30,6 +30,7 @@ public class HtmlHelper {
       
           try
         {
+            WdbPageManager pm= new WdbPageManager(scontext, model);
             Properties p= new Properties();
             p.setProperty("resource.loader", "file");         
             p.setProperty("file.resource.loader.path", scontext.getRealPath("/WEB-INF"));
@@ -43,6 +44,7 @@ public class HtmlHelper {
             VelocityContext context = new VelocityContext();
         
             context.put("Model",model);
+            context.put("Helper", pm);
 
            String templateFile=String.format(ViewFilePathTemplateCustom,ViewName);
             

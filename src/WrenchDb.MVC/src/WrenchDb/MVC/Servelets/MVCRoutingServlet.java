@@ -4,8 +4,10 @@
  */
 package WrenchDb.MVC.Servelets;
 
+import WrenchDb.MVC.BaseClasses.Model.RequestModel;
+import WrenchDb.MVC.BaseClasses.Model.ModelBase;
 import WrenchDb.MVC.BaseClasses.*;
-import WrenchDb.MVC.Context.RoutingContext;
+import WrenchDb.MVC.Context.WdbAppContext;
 import WrenchDb.MVC.Helpers.HtmlHelper;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -39,14 +41,14 @@ public class MVCRoutingServlet extends HttpServlet {
 
             String url = req.getRequestURI();
             //resp.getWriter().print(url);
-            RuleMatchingResult result = RoutingContext.Current().GetRouteResult(url);
+            RuleMatchingResult result = WdbAppContext.Current().GetRouteResult(url);
             RequestModel m = RequestModel.CreateRequestModel(result.ModelData, req);
             if (!result.IsMatching) {
                 HtmlHelper.RenderView("404", m, resp.getWriter(), req.getServletContext());
                 return;
             }
             // ModelBase model=result.
-            ControllerBase cb = RoutingContext.Current().getController(result.ControllerName);
+            ControllerBase cb = WdbAppContext.Current().getController(result.ControllerName);
             Class<?>[] args = new Class<?>[1];
             args[0] = ModelBase.class;
 

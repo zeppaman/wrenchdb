@@ -4,6 +4,8 @@
  */
 package WrenchDb.MVC.BaseClasses;
 
+import WrenchDb.MVC.BaseClasses.Model.ModelBase;
+
 /**
  *
  * @author d.fontani

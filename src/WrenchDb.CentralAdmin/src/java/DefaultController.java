@@ -3,7 +3,7 @@ import WrenchDb.MVC.Annotations.Action;
 import WrenchDb.MVC.Annotations.Controller;
 import WrenchDb.MVC.BaseClasses.ActionResult;
 import WrenchDb.MVC.BaseClasses.ControllerBase;
-import WrenchDb.MVC.BaseClasses.ModelBase;
+import WrenchDb.MVC.BaseClasses.Model.ModelBase;
 
 /*
  * To change this template, choose Tools | Templates

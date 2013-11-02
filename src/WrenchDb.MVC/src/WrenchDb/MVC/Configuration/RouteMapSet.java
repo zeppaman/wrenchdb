@@ -5,6 +5,7 @@
 package WrenchDb.MVC.Configuration;
 
 import WrenchDb.Core.Configuration.*;
+import WrenchDb.Core.Helpers.WdbStringHelper;
 import WrenchDb.MVC.BaseClasses.RuleMatchingResult;
 import org.apache.commons.lang.StringUtils;
 import org.reflections.Configuration;
@@ -74,8 +75,8 @@ public class RouteMapSet
         result.IsMatching=true;
         if(r==null) return result;
         
-       String[] tokensUrl=url.split("/",-1);
-       String[] tokensRule=r.getUrl().split("/",-1);
+       String[] tokensUrl=WdbStringHelper.split(url,"/");
+       String[] tokensRule=WdbStringHelper.split(r.getUrl(),"/");
        
        if(tokensUrl.length!=tokensRule.length)
        {
