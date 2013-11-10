@@ -5,6 +5,7 @@
 package WrenchDb.MVC.BaseClasses;
 
 import WrenchDb.MVC.Annotations.*;
+import javax.servlet.http.HttpServletRequest;
 
 
 
@@ -14,8 +15,12 @@ import WrenchDb.MVC.Annotations.*;
  */
 public abstract class ControllerBase {
     
-    
-     
+    public ControllerBase()
+    {}
+      public ControllerBase(HttpServletRequest _request)
+    {
+        this._request=_request;
+    }
     /**
      * 
      * @return Name of controller. Used in path routing
@@ -32,6 +37,15 @@ public abstract class ControllerBase {
                 }
             }
         return null;
+    }
+    
+    private HttpServletRequest _request=null;
+
+    /**
+     * @return the _request
+     */
+    public HttpServletRequest getRequest() {
+        return _request;
     }
    
     

@@ -11,6 +11,7 @@ import WrenchDb.Core.Interfaces.JSONRenderizzable;
 import WrenchDb.Core.Interfaces.NamedItem;
 import WrenchDb.Data.Model.Enums.*;
 import WrenchDb.Data.Model.Lists.CrudColumnList;
+import WrenchDb.MVC.BaseClasses.Model.ModelBase;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,7 +78,10 @@ implements JSONRenderizzable, NamedItem, HtmlRenderizzable {
       jre.AppendProperty("viewrecords", "true");
       jre.AppendPropertyIfValued("sortname", this.DefaultSortColumnName);
       jre.AppendProperty("caption", this.Title);
-      jre.AppendProperty("pager", "jQuery('#"+this.getPagerId()+"')");
+      jre.AppendProperty("autowidth",true);
+      jre.AppendProperty("autowidth",true);
+      jre.AppendProperty("shrinkToFit",true);
+      jre.WriteRaw(",pager:jQuery('#"+this.getPagerId()+"')");
       if(DefaultSortColumnName!=null)
       {
         jre.AppendProperty("sortorder", this.DefaultSortColumnOrder);
@@ -115,21 +119,26 @@ implements JSONRenderizzable, NamedItem, HtmlRenderizzable {
       
     }
 
-     private String _name="";
+    
     @Override
     public String getName() {
-        return _name;
+        return InstanceId;
     }
     public void setName(String value) {
-         _name=value;
+         InstanceId=value;
     }
 
-  
+
+    public String GetHtml() {
+        HtmlRenderer sb= new HtmlRenderer();
+        RenderAsHtml(sb);
+        return sb.GetHtml();  
+   }
     @Override
     public String RenderAsHtml() {
         HtmlRenderer sb= new HtmlRenderer();
         RenderAsHtml(sb);
-        return sb.toString();    }
+        return sb.GetHtml();    }
 
     @Override
     public void RenderAsHtml(HtmlRenderer sb) {

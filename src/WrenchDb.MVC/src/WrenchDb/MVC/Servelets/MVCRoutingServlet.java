@@ -9,6 +9,7 @@ import WrenchDb.MVC.BaseClasses.Model.ModelBase;
 import WrenchDb.MVC.BaseClasses.*;
 import WrenchDb.MVC.Context.WdbAppContext;
 import WrenchDb.MVC.Helpers.HtmlHelper;
+import WrenchDb.MVC.Helpers.WdbPageManager;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -36,29 +37,37 @@ public class MVCRoutingServlet extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+       
+        
+        ActionResult ar= null;
+        
         try {
-            super.service(req, resp); //To change body of generated methods, choose Tools | Templates.
+            super.service(req, resp); 
 
             String url = req.getRequestURI();
             //resp.getWriter().print(url);
             RuleMatchingResult result = WdbAppContext.Current().GetRouteResult(url);
             RequestModel m = RequestModel.CreateRequestModel(result.ModelData, req);
+           
+            
             if (!result.IsMatching) {
-                HtmlHelper.RenderView("404", m, resp.getWriter(), req.getServletContext());
-                return;
+                ar= new ActionResult("404","OneColumn",m);
             }
-            // ModelBase model=result.
-            ControllerBase cb = WdbAppContext.Current().getController(result.ControllerName);
-            Class<?>[] args = new Class<?>[1];
-            args[0] = ModelBase.class;
+            else
+            {
+                // ModelBase model=result.
+                ControllerBase cb = WdbAppContext.Current().getController(result.ControllerName);
+                Class<?>[] args = new Class<?>[1];
+                args[0] = ModelBase.class;
 
-            Method control = cb.getClass().getMethod(result.ActionName, args);
-            ActionResult ar = (ActionResult) control.invoke(cb, m);
-            if (ar == null || ar.ViewName == null || ar.ViewName.equals("")) {
-                HtmlHelper.RenderView("500", m, resp.getWriter(), req.getServletContext());
-            } else {
-                HtmlHelper.RenderView(ar.ViewName, ar.Model, resp.getWriter(), req.getServletContext());
+                Method control = cb.getClass().getMethod(result.ActionName, args);
+                 ar = (ActionResult) control.invoke(cb, m);
+                if (ar == null || ar.ViewName == null || ar.ViewName.equals("")) {
+                  ar= new ActionResult("500","OneColumn",m);
+                } 
             }
+            
+           
 
 
         } catch (Exception ex) {
@@ -73,8 +82,12 @@ public class MVCRoutingServlet extends HttpServlet {
                 }
             }
             hm.put("stacktrace", s);
-            HtmlHelper.RenderView("500", RequestModel.CreateRequestModel(hm, req), resp.getWriter(), req.getServletContext());
-        }
-
+            
+            
+            ar= new ActionResult("500","OneColumn",RequestModel.CreateRequestModel(hm, req));
+  
+         }
+         WdbPageManager pm= new WdbPageManager(req, ar,resp);
+         pm.RenderView();
     }
 }

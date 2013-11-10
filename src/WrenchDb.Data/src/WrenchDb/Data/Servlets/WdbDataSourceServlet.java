@@ -25,7 +25,7 @@ extends HttpServlet {
         try 
         {
             CrudTableSet cs= new CrudTableSet();
-            CrudTable ct= cs.GetByName("");
+            CrudTable ct= cs.GetByName(req.getParameter("ctable"));
             
         }
         catch(Exception err)

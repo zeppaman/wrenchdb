@@ -90,4 +90,8 @@ public class JSONRenderer {
     private void AppendValue(Object Value) {
          sb.append( JSONHelper.ConvertBaseType(Value));
     }
+
+    public void WriteRaw(String string) {
+        sb.append(string);
+      }
 }

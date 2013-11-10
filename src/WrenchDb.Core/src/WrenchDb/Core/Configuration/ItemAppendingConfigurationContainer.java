@@ -34,6 +34,7 @@ public abstract class ItemAppendingConfigurationContainer<ObjectType> {
         if(!_inited)
         {
             LoadItems();
+            _inited=true;
         }
         return items;
     }
@@ -78,26 +79,27 @@ public abstract class ItemAppendingConfigurationContainer<ObjectType> {
         Set<Class<? extends ItemAppendingConfiguration>> configs 
                 = ReflectionHelper.getSubTypesOf(ItemAppendingConfiguration.class);
         ItemAppenderConfigurator ann=null;
-        
+        Constructor<?> ctor;
+        ItemAppendingConfiguration refl;
         for (Class<? extends ItemAppendingConfiguration> item : configs)
         {
             ann=item.getAnnotation(ItemAppenderConfigurator.class);
            //Same configurator type &&  same name
            if(ann!=null && ann.Name().equals(getName()) )
            {
-               Constructor<?> ctor;
+               
                try {
                    ctor = item.getConstructor(null);
 
                 Object object = ctor.newInstance(); 
-                ItemAppendingConfiguration refl=(ItemAppendingConfiguration)object;
+                refl=(ItemAppendingConfiguration)object;
                 
                
                     Class[] cArg = new Class[1];
-                    cArg[0]=getItems().getClass();
+                    cArg[0]=items.getClass();
 
                     item.getMethod("Configure",cArg)
-                        .invoke(object, getItems());
+                        .invoke(object, items);
                 
 
                 } catch (Exception ex) {

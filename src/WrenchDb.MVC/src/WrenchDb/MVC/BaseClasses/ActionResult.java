@@ -13,4 +13,12 @@ import WrenchDb.MVC.BaseClasses.Model.ModelBase;
 public class ActionResult {
     public ModelBase Model=null;
     public String ViewName=null;
+    public String LayoutName=null;
+    
+    public ActionResult(String ViewName,String LayoutName,ModelBase Model)
+    {
+        this.ViewName=ViewName;
+        this.LayoutName=LayoutName;
+        this.Model=Model;
+    }
 }

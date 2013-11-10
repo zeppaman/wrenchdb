@@ -4,25 +4,34 @@
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         $Render.RenderRegion("head")
+<style>
+    .container
+    {
+    width:100%;
+    }
+</style>
     </head>
 <body>
     <!-- Region Header --> 
- <div class="navbar navbar-default navbar-static-top bsnavbar"  style="margin-bottom:0px">
-     
-     <div class="navbar-header" >
-         $Render.RenderRegion("header")
-    </div>
 
-</div>
+         $Render.RenderRegion("header")
+
 <!-- Region Menu -->
- $Render.RenderRegion("menu");
+ $Render.RenderRegion("menu")
 <!-- Region Main -->
-<div class="container bs-docs-container">
-    <div class="row">
-        <div class="col-md-12" role="main">
+<div class="container">
+<div class="row-fluid">
+        <div class="col-12" role="main">
           $Render.RenderRegion("main")
         </div>
-    </div>
+</div>
 </div>
 
+
+
+<footer class="footer">
+      <div class="container">
+      $Render.RenderRegion("footer")
+      </div>
+</footer>
 </body>

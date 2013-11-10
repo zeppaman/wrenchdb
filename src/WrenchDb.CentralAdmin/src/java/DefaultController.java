@@ -1,4 +1,6 @@
 
+import WrenchDb.Data.Configuration.CrudTableSet;
+import WrenchDb.Data.Model.CrudTable;
 import WrenchDb.MVC.Annotations.Action;
 import WrenchDb.MVC.Annotations.Controller;
 import WrenchDb.MVC.BaseClasses.ActionResult;
@@ -49,4 +51,23 @@ public class DefaultController extends ControllerBase {
         r.Model.Properties.put("id", "MODIFICATO");
         return r;
     }
+    
+    
+    @Action
+    public ActionResult ViewGrid(ModelBase model)
+    {
+         ActionResult r= new ActionResult("DataGrid","OneColumn",new ModelBase());
+ 
+         
+         CrudTableSet cs= new CrudTableSet();
+         cs.LoadItems();
+        r.Model= new ModelBase();
+        CrudTable ct=cs.GetByName(model.get("id"));
+        r.Model.Properties.put("ctable",ct );
+        r.Model.Properties.put("title", ct.Title);
+       
+        return r;
+    }
+    
+     
 }
