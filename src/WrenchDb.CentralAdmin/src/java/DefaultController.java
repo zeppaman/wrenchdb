@@ -30,11 +30,12 @@ public class DefaultController extends ControllerBase {
     @Action
     public ActionResult Index(ModelBase model)
     {
-        ActionResult r= new ActionResult();
-        r.ViewName="default";
+        ActionResult r= new ActionResult("default","OneColumn",new ModelBase());
+        
         r.Model= new ModelBase();
         r.Model.Properties.put("id", "MODIFICATO");
         r.Model.Properties.put("link","/TestNotation/default/Prova/123");
+        
         return r;
                 
     }
@@ -42,8 +43,8 @@ public class DefaultController extends ControllerBase {
     @Action
     public ActionResult Prova(ModelBase model)
     {
-        ActionResult r= new ActionResult();
-        r.ViewName="ok";
+         ActionResult r= new ActionResult("ok","OneColumn",new ModelBase());
+ 
         r.Model= new ModelBase();
         r.Model.Properties.put("id", "MODIFICATO");
         return r;

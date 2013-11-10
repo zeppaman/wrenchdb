@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        $Render.RenderRegion("head")
+    </head>
+<body>
+    <!-- Region Header --> 
+ <div class="navbar navbar-default navbar-static-top bsnavbar"  style="margin-bottom:0px">
+     
+     <div class="navbar-header" >
+         $Render.RenderRegion("header")
+    </div>
+
+</div>
+<!-- Region Menu -->
+ $Render.RenderRegion("menu");
+<!-- Region Main -->
+<div class="container bs-docs-container">
+    <div class="row">
+        <div class="col-md-12" role="main">
+          $Render.RenderRegion("main")
+        </div>
+    </div>
+</div>
+
+</body>
