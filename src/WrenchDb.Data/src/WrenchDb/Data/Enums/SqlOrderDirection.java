@@ -14,19 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package WrenchDb.MVC.BaseClasses;
+package WrenchDb.Data.Enums;
 
 /**
  *
  * @author d.fontani
  */
-public class CssReference 
-extends LinkReference {
- public CssReference()
- {
-     this.media="all";
-     this.rel="stylesheet" ;
-     this.type="text/css" ;
-             
- }
+public enum SqlOrderDirection {
+    ASC,
+    DESC
 }

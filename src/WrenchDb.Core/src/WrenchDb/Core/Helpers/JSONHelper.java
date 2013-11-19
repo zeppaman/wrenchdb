@@ -20,7 +20,7 @@ public class JSONHelper {
        String cname= Value.getClass().getName();
        String literalValue="";
        
-        System.err.println("sdsd"+cname+" "+Value.toString());
+       // System.err.println("sdsd"+cname+" "+Value.toString());
        switch(cname)
        {
             case "java.lang.String": literalValue="\""+Value.toString().replace("\"", "\\\"") +"\""; 
@@ -30,6 +30,8 @@ public class JSONHelper {
             case "java.lang.Float": literalValue=Value.toString() ;
             break;
             case "java.lang.Integer": literalValue=Value.toString() ;
+            break;
+            case "java.lang.BigInteger": literalValue=Value.toString() ;
             break;
             case "java.lang.Long": literalValue=Value.toString() ;
              break;

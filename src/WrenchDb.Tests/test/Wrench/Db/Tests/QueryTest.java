@@ -14,19 +14,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package WrenchDb.MVC.BaseClasses;
+package Wrench.Db.Tests;
+
+import WrenchDb.Data.Enums.SqlComparators;
+import WrenchDb.Data.Helpers.SelectBuilder;
+import org.junit.Test;
 
 /**
  *
  * @author d.fontani
  */
-public class CssReference 
-extends LinkReference {
- public CssReference()
- {
-     this.media="all";
-     this.rel="stylesheet" ;
-     this.type="text/css" ;
-             
- }
+public class QueryTest {
+    
+    @Test
+    public void TestSelectBuilder()
+    {
+        SelectBuilder s= new SelectBuilder();
+                s.Field("PROVA")
+                .Sum("PROVA1","pROVA2")
+                .Count("PROVA1","pROVA2")
+                .From("PROVA_TABLE")
+                .AndWhere("PROVA", SqlComparators.EQUAL, "23")
+                .GroupBy("PROVA")
+                .OrderBy("PROVA");
+        String query =s.toString();
+    }
 }

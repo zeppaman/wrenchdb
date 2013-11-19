@@ -5,6 +5,11 @@
         <servlet-class>WrenchDb.MVC.Servelets.MVCRoutingServlet</servlet-class>
     </servlet>   
     
+    <servlet>
+        <servlet-name>jqgrid-datahandler</servlet-name>
+        <servlet-class>WrenchDb.Data.Servlets.WdbDataSourceServlet</servlet-class>
+    </servlet>  
+    
    
     <session-config>
         <session-timeout>
@@ -38,8 +43,17 @@
     </init-param>
    </filter-mapping>
    
+   
    <servlet-mapping>
--        <servlet-name>routing-engine</servlet-name>
--        <url-pattern>/*</url-pattern>
--    </servlet-mapping>
+        <servlet-name>jqgrid-datahandler</servlet-name>
+       <url-pattern>/handlers/datahandler</url-pattern>
+   </servlet-mapping>
+   
+   <servlet-mapping>
+        <servlet-name>routing-engine</servlet-name>
+       <url-pattern>/*</url-pattern>
+   </servlet-mapping>
+   
+
+   
 </web-app>

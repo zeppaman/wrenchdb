@@ -1,6 +1,18 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * Copyright (C) 2013 Daniele Fontani
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package WrenchDb.Data.Model;
 
@@ -9,6 +21,7 @@ import WrenchDb.Core.Helpers.JSONRenderer;
 import WrenchDb.Core.Interfaces.HtmlRenderizzable;
 import WrenchDb.Core.Interfaces.JSONRenderizzable;
 import WrenchDb.Core.Interfaces.NamedItem;
+import WrenchDb.Data.Enums.SqlOrderDirection;
 import WrenchDb.Data.Model.Enums.*;
 import WrenchDb.Data.Model.Lists.CrudColumnList;
 import WrenchDb.MVC.BaseClasses.Model.ModelBase;
@@ -31,8 +44,9 @@ implements JSONRenderizzable, NamedItem, HtmlRenderizzable {
        public List<Integer> RowCountList =new ArrayList<Integer>();
        public String InstanceId="";
        public String DefaultSortColumnName=null;
-       public CrudTableSortOrder DefaultSortColumnOrder= CrudTableSortOrder.asc;
+       public SqlOrderDirection DefaultSortColumnOrder= SqlOrderDirection.ASC;
        public String Title="";
+       public String TableName;
       
        /*
      
@@ -72,7 +86,7 @@ implements JSONRenderizzable, NamedItem, HtmlRenderizzable {
     @Override
     public void RenderAsJSON(JSONRenderer jre) {
       jre.AppendProperty("url", DataUrl);
-      jre.AppendProperty("datatyoe", this.DataType);
+      jre.AppendProperty("datatype", this.DataType);
       jre.AppendProperty("mtype","GET");
       jre.AppendProperty("rowNum", InitialRowCount);
       jre.AppendProperty("viewrecords", "true");
@@ -102,7 +116,7 @@ implements JSONRenderizzable, NamedItem, HtmlRenderizzable {
       
         for(CrudTableColumn ct :_columns )
         {
-            jre.AppendProperty(null,ct.getName());
+            jre.AppendProperty(null,ct.Header);
         }
       jre.EndArrayProperty(); //Ends ColNames
       
@@ -165,5 +179,13 @@ implements JSONRenderizzable, NamedItem, HtmlRenderizzable {
        sb.WriteHtml("});");
       sb.RenderEndTag();
       
+    }
+
+    public  int GetPkIdx() {
+       for(int i=0; i<this.Columns.size();i++)
+        {
+            if(this.Columns.get(i).IsPrimaryKey) return i;
+        }
+       return -1;
     }
 }

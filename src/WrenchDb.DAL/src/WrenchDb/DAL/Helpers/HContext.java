@@ -7,6 +7,7 @@ package WrenchDb.DAL.Helpers;
 import java.io.FileInputStream;
 import java.io.Serializable;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
@@ -27,6 +28,8 @@ public class HContext {
     private   SessionFactory _sessionFactory;
 
     private   Configuration _configuration;
+    
+    
     public static void Init(String path)  {
         try
         {
@@ -130,6 +133,41 @@ public class HContext {
        return result;
     }
     
+    public List ExecuteSelectQuery(String sqlSelect)
+    {
+        Session s= this._sessionFactory.openSession();
+        Boolean result=false;
+       try
+       {
+           
+         return ExecuteSelectQuery(s,sqlSelect);
+         
+        
+       }
+       catch(Exception ex)
+       {
+          
+           Logger.getLogger(HContext.class.getName()).log(Level.SEVERE, null, ex);
+       }
+       finally
+       {
+          s.close();
+       }
+       return null;
+    }
+    public List ExecuteSelectQuery(Session s,String sqlSelect)
+    { 
+        try
+        {
+            SQLQuery q=  s.createSQLQuery(sqlSelect);
+            return q.list();
+        }
+        catch(Exception ex)
+        {
+              Logger.getLogger(HContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
     public Boolean SaveOrUpdate(Session s,Object entity)
     {
         try
