@@ -24,5 +24,6 @@ public enum DataSourceMode {
     LIST,
     ADD,
     EDIT,
-    DELETE
+    DELETE,
+    LOOKUP
 }

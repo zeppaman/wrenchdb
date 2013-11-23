@@ -75,8 +75,17 @@ public static String GetWhereSql(String FieldName, SqlComparators comp, Object V
         
 
         switch (dt) {
-            case Boolean:                
-                    literalValue = Value.toString();                
+            case Boolean:      
+                  
+                    literalValue = Value.toString();  
+                    if("true".equals(literalValue) || "on".equals(literalValue) || "1".equals(literalValue))
+                    {
+                        literalValue ="TRUE";
+                    }
+                    else
+                    {
+                         literalValue ="FALSE";
+                    }
                 break;
             case Date:
                 if(Value instanceof String)

@@ -24,6 +24,9 @@ import ro.isdc.wro.model.group.GroupExtractor;
 import ro.isdc.wro.model.resource.locator.UriLocator;
 import ro.isdc.wro.model.resource.processor.ResourcePostProcessor;
 import ro.isdc.wro.model.resource.processor.ResourcePreProcessor;
+import ro.isdc.wro.model.resource.processor.factory.ProcessorsFactory;
+import ro.isdc.wro.model.resource.processor.factory.*;
+import ro.isdc.wro.model.resource.processor.impl.css.CssDataUriPreProcessor;
 
 /**
  *
@@ -34,8 +37,17 @@ public class WdbWroManagerFactory
   extends ConfigurableWroManagerFactory {
 
     @Override
+    protected ProcessorsFactory newProcessorsFactory() {
+      final SimpleProcessorsFactory factory = new SimpleProcessorsFactory();
+      factory.addPreProcessor(new CssDataUriPreProcessor());
+      return factory;
+    }
+
+    @Override
     public ConfigurableWroManagerFactory setConfigProperties(Properties configProperties) {
+        configProperties.setProperty("preProcessors", "cssUrlRewriting,cssImport,semicolonAppender");
         return super.setConfigProperties(configProperties); //To change body of generated methods, choose Tools | Templates.
+  
     }
 
     @Override

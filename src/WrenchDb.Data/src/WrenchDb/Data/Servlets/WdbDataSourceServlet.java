@@ -16,11 +16,14 @@
  */
 package WrenchDb.Data.Servlets;
 
+import WrenchDb.Core.Classes.HtmlRenderer;
 import WrenchDb.Core.Helpers.JSONHelper;
 import WrenchDb.Core.Helpers.WdbStringHelper;
 import WrenchDb.DAL.Helpers.HContext;
 import WrenchDb.Data.Configuration.CrudTableSet;
 import WrenchDb.Data.Enums.DataSourceMode;
+import static WrenchDb.Data.Enums.DataSourceMode.LIST;
+import WrenchDb.Data.Enums.JqGridFieldType;
 import WrenchDb.Data.Enums.SqlComparators;
 import WrenchDb.Data.Helpers.*;
 import WrenchDb.Data.Model.*;
@@ -68,6 +71,9 @@ extends HttpServlet {
                     break;
                 case LIST:
                     doList(ct, req, resp);
+                    break;
+                 case LOOKUP:
+                    doLookup(ct, req, resp);
                     break;
                 default:
                     throw new Exception("DataSourceMode not supported yet");
@@ -135,7 +141,7 @@ extends HttpServlet {
     }
 
     private DataSourceMode GetDataSourceMode(HttpServletRequest req) {
-        if( WdbStringHelper.isBlank(req.getParameter("oper")))
+        if( WdbStringHelper.isBlank(req.getParameter("oper")) && WdbStringHelper.isBlank(req.getParameter("mode")))
         {
             return DataSourceMode.LIST;
         }else
@@ -152,6 +158,11 @@ extends HttpServlet {
         {
              return DataSourceMode.DELETE;
         }
+        if("lookup".equals( req.getParameter("mode")))
+        {
+            return DataSourceMode.LOOKUP;
+        }
+        
         return DataSourceMode.LIST;
         
     }
@@ -159,19 +170,40 @@ extends HttpServlet {
     public void doList(CrudTable ct, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try
         {
+            
         SelectBuilder sb= new SelectBuilder();
         //TODO: avoid double field inclusion
+        String ColName=null;
+        
         for( CrudTableColumn cc:ct.Columns)
         {
-                sb.Field(cc.Name);
+            
+            ColName=(cc.ColumnName==null)?cc.Name:cc.ColumnName;
+            if(!ColName.contains("."))
+                ColName=ct.TableName+"."+ColName;
+            
+            
+                sb.Field(ColName);
+           
         }
         
         sb.From(ct.TableName);
+        
+        //JOIN
+        for( CrudTableColumn cc:ct.Columns)
+        {
+            if(cc.FieldType== JqGridFieldType.Lookup)
+            {
+                //ADD JOIN
+                sb.LeftJoin(ct.TableName+"."+cc.Name,cc.LookupTable,cc.LookupId," lt_"+cc.Name); //LOOKUP FOR...                
+            }
+        }
         //TODO: parse filters and add where conditions
         sb.OrderBy(ct.DefaultSortColumnName,ct.DefaultSortColumnOrder);
         
        String sql= sb.toString();
        
+       //TODO: FIX IN GLOBAL CONFIGURATION
        HContext.Init( req.getServletContext().getRealPath("WEB-INF/wdb_db.properties"));
         
        List l= HContext
@@ -241,8 +273,41 @@ extends HttpServlet {
                 ib.Field(ctc.Name,req.getParameter(ctc.Name),ctc.DbType);
             }
         }
+        //TODO: FIX IN GLOBAL CONFIGURATION
+       HContext.Init( req.getServletContext().getRealPath("WEB-INF/wdb_db.properties"));
         int rows=HContext.Current().ExecuteNoResult(ib.toString());
         
+    }
+
+    private void doLookup(CrudTable ct, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
+        SelectBuilder sb= new SelectBuilder();
+        //TODO: avoid double field inclusion
+        
+       sb.Field(req.getParameter("ext_id"),"ext_id");
+       sb.Field(req.getParameter("ext_label"),"ext_label");
+       sb.From(req.getParameter("ext_table"));
+       sb.OrderBy(req.getParameter("ext_label"));
+       
+        //TODO: FIX IN GLOBAL CONFIGURATION
+       HContext.Init( req.getServletContext().getRealPath("WEB-INF/wdb_db.properties"));
+       List l= HContext
+            .Current()
+            .ExecuteSelectQuery(sb.toString());
+        HtmlRenderer r = new HtmlRenderer();
+        r.RenderBeginTag("select");
+        Object[] o;
+         for(int i=0;i<l.size();i++)
+        {
+            o=(Object[])l.get(i);
+            r.AppendAttribute("value", (o[0]==null)?"":o[0].toString());
+            r.RenderBeginTag("option");
+            r.WriteHtml((o[1]==null)?"":o[1].toString());
+            r.RenderEndTag();
+        }
+        r.RenderEndTag();
+       
+        resp.getWriter().append(r.GetHtml());
     }
 
     

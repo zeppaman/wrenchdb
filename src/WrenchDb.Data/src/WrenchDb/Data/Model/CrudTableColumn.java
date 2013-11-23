@@ -19,6 +19,8 @@ package WrenchDb.Data.Model;
 import WrenchDb.Core.Helpers.JSONRenderer;
 import WrenchDb.Core.Interfaces.JSONRenderizzable;
 import WrenchDb.Core.Interfaces.NamedItem;
+import WrenchDb.Data.Enums.JqGridFieldType;
+import static WrenchDb.Data.Enums.JqGridFieldType.Url;
 import WrenchDb.Data.Enums.SqlDataTypes;
 import WrenchDb.Data.Enums.jqGridEditType;
 
@@ -35,11 +37,15 @@ implements JSONRenderizzable,NamedItem {
     public Integer Width=new Integer(100);
      /*Edit settings*/
        public boolean IsEditable=false;
-       public jqGridEditType EditType= jqGridEditType.text;
+       public JqGridFieldType FieldType= JqGridFieldType.SingleLineText;
        public CrudTableEditOption EditOptions= new CrudTableEditOption();
        public CrudTableEditRules EditRules= new CrudTableEditRules();
        public CrudTableColumnFormOptions FormOptions= new CrudTableColumnFormOptions();
        public SqlDataTypes DbType= SqlDataTypes.Text;
+    public String LookupTable= null;
+    public String LookupId= null;
+    public String LookupDesc= null;
+    public String ColumnName=null;
     
     @Override
     public String RenderAsJSON() {
@@ -58,6 +64,7 @@ implements JSONRenderizzable,NamedItem {
       jre.AppendProperty("width", this.Width);
           /*Edit settings*/
        jre.AppendProperty("editable",this.IsEditable);
+       jre.AppendProperty("edittype",GetEditTypeFromFieldType(this.FieldType));
        if(this.IsEditable)
        {
             jre.StartObjectProperty("editoptions");
@@ -82,6 +89,29 @@ implements JSONRenderizzable,NamedItem {
     }
     public void setName(String value) {
          Name=value;
+    }
+
+    private jqGridEditType GetEditTypeFromFieldType(JqGridFieldType FieldType) {
+       switch(FieldType)
+       {
+           case CheckBox: return jqGridEditType.checkbox;
+           case DatePicker: return jqGridEditType.text;
+           case File:return jqGridEditType.file;
+           case HtmlText: return jqGridEditType.textarea;
+           case Image: return jqGridEditType.image;
+           case Integer: return jqGridEditType.text;
+           case Lookup: return jqGridEditType.select;
+           case MultiLineText: return jqGridEditType.textarea;
+           case Number:return jqGridEditType.text;
+           case Password:return jqGridEditType.password;
+           case RadioChoice:return jqGridEditType.custom;
+           case SelectChoice: return jqGridEditType.select;
+           case SingleLineText:return jqGridEditType.text;
+           case Url:return jqGridEditType.text;
+           case Email:return jqGridEditType.text;
+           default:
+               return jqGridEditType.custom;
+       }
     }
     
 }

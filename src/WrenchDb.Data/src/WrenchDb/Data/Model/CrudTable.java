@@ -17,6 +17,7 @@
 package WrenchDb.Data.Model;
 
 import WrenchDb.Core.Classes.HtmlRenderer;
+import WrenchDb.Core.Helpers.JSONHelper;
 import WrenchDb.Core.Helpers.JSONRenderer;
 import WrenchDb.Core.Interfaces.HtmlRenderizzable;
 import WrenchDb.Core.Interfaces.JSONRenderizzable;
@@ -138,7 +139,7 @@ implements JSONRenderizzable, NamedItem, HtmlRenderizzable {
       
         for(CrudTableColumn ct :_columns )
         {
-            jre.AppendProperty(null,ct.Header);
+            jre.AppendProperty(null,(ct.Header==null)?ct.Name:ct.Header);
         }
       jre.EndArrayProperty(); //Ends ColNames
       
@@ -195,17 +196,27 @@ implements JSONRenderizzable, NamedItem, HtmlRenderizzable {
                  sb.RenderEndTag();
       sb.RenderEndTag();
       
-      
+      //TODO: Rendere configurabili
+      //{parameters}, prmEdit, prmAdd, prmDel, prmSearch, prmView
+      String prmEdit="{\"width\":900,\"closeAfterEdit\":true}";
+      String prmAdd="{\"width\":900,\"closeAfterAdd\":true}";
+      String prmDel="{\"width\":400}";
+      String prmSearch="{\"width\":900}";
+      String prmView="{\"width\":900}";
+      String params="{view:"+JSONHelper.ConvertBaseType(AllowView)
+              +",del:"+JSONHelper.ConvertBaseType(AllowDelete)
+              +",edit:"+JSONHelper.ConvertBaseType(AllowEdit)+"}";
+       
       //JS
       sb.RenderBeginTag("script");
       sb.WriteHtml("jQuery(document).ready(function(){ ");
       sb.WriteHtml("jQuery('#"+this.getTableId()+"').jqGrid("+
-              this.RenderAsJSON()+") .jqGrid('navGrid','#"+this.getPagerId()+"',null,"
-              +AllowEdit+","
-              +AllowAdd+","
-              +AllowDelete+","
-              +AllowSearch+","
-              +AllowView+");");
+              this.RenderAsJSON()+") .jqGrid('navGrid','#"+this.getPagerId()+"',"+params+","
+              +prmEdit+","
+              +prmAdd+","
+              +prmDel+","
+              +prmSearch+","
+              +prmView+");");
        sb.WriteHtml("});");
       sb.RenderEndTag();
       

@@ -170,4 +170,30 @@ public class SelectBuilder {
       return this.Field(" COUNT("+FieldName+")",FieldAlias);
       
     }
+
+    public void LeftJoin(String FkColumn, String ForeignTable, String ForeignTableColumnPk,String FkAlias) {
+        _from.append(" LEFT JOIN ");
+        _from.append(ForeignTable);
+        _from.append(" ");
+        if(!WdbStringHelper.isBlank( FkAlias))
+        {
+            _from.append(FkAlias);
+            
+        }
+        _from.append(" ON ");
+        _from.append(FkColumn);
+        _from.append(" = ");
+        if(!WdbStringHelper.isBlank( FkAlias))
+        {
+             _from.append(FkAlias);
+             _from.append(".");
+        }
+        else
+        {
+             _from.append(ForeignTable);
+             _from.append(".");
+        }
+        _from.append(ForeignTableColumnPk);
+        
+    }
 }

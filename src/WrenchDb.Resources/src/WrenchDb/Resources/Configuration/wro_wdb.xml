@@ -54,6 +54,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
        <js>classpath:WrenchDb/Resources/Bootstrap/js/application.js</js>
   </group>
  
+                
+   <group name="OverrideCss">
+      <css>classpath:WrenchDb/Resources/Wdb/*.css</css>
+  </group>
+  
   <group name="WdbCa">
    
      
@@ -65,7 +70,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       <group-ref>BootstrapCss</group-ref>
       <group-ref>jqGridCss</group-ref>
       <group-ref>jqQueryUIMetro</group-ref>
-
+      <group-ref>OverrideCss</group-ref>
   </group>
 
 </groups>

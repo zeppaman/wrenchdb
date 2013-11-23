@@ -1,0 +1,26 @@
+
+
+
+
+div.ui-jqgrid-titlebar
+{
+    display:none;
+}
+
+.jqgrow.ui-state-highlight
+{
+   background: none repeat scroll 0 0 #ACF;
+   color: #00A;
+}
+
+.jqgrow.ui-state-hover
+{
+   background: none repeat scroll 0 0 #BDF;
+   color: #00A;
+   margin: none;
+   border:none;
+   -moz-border-radius: none;
+  border-radius: none;
+}
+
+

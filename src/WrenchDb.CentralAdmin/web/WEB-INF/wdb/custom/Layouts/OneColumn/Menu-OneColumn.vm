@@ -11,23 +11,20 @@
         <div class="collapse navbar-collapse bs-js-navbar-collapse">
           <ul class="nav navbar-nav">
             <li class="dropdown">
-              <a id="drop1" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+              <a id="drop1" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Configuration <b class="caret"></b></a>
               <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="/WrenchDb.CentralAdmin/CrudController/ViewGrid/wdb_application">Applications</a></li>
-               <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Another action</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Something else here</a></li>
-                <li role="presentation" class="divider"></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Separated link</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="/WrenchDb.CentralAdmin/CrudController/ViewGrid/wdb_settings">Settings</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="/WrenchDb.CentralAdmin/CrudController/ViewGrid/wdb_sitemap">Sitemap</a></li>
               </ul>
             </li>
             <li class="dropdown">
-              <a href="#" id="drop2" role="button" class="dropdown-toggle" data-toggle="dropdown">Dropdown 2 <b class="caret"></b></a>
+              <a href="#" id="drop2" role="button" class="dropdown-toggle" data-toggle="dropdown">Database <b class="caret"></b></a>
               <ul class="dropdown-menu" role="menu" aria-labelledby="drop2">
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Action</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Another action</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Something else here</a></li>
-                <li role="presentation" class="divider"></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Separated link</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="/WrenchDb.CentralAdmin/CrudController/ViewGrid/wdb_property_type">Property Type</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="/WrenchDb.CentralAdmin/CrudController/ViewGrid/wdb_entity">Entities</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="/WrenchDb.CentralAdmin/CrudController/ViewGrid/wdb_property">Properties</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="/WrenchDb.CentralAdmin/CrudController/ViewGrid/wdb_changescript">ChangeScript</a></li>
               </ul>
             </li>
           </ul>
