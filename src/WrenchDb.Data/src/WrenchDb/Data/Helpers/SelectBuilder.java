@@ -60,25 +60,33 @@ public class SelectBuilder {
        _orderBy.append(dir.toString());
         return this;
     }
-    
-    public SelectBuilder OrWhere(String FieldName,SqlComparators comp, Object value)
+     public SelectBuilder OrWhere(String FieldName,SqlComparators comp, Object value)
+    {
+        return OrWhere(FieldName, comp, value,SqlHelper.GetSqlDataTypeByValue(value));
+    }
+     
+    public SelectBuilder OrWhere(String FieldName,SqlComparators comp, Object value,SqlDataTypes dt)
     {
          if(_where.length()>0)
         {
             _where.append( " OR ");
         }
         
-        _where.append(SqlHelper.GetWhereSql(FieldName,comp,value));
+        _where.append(SqlHelper.GetWhereSql(FieldName,comp,value,dt));
         return this;
     }
     public SelectBuilder AndWhere(String FieldName,SqlComparators comp, Object value)
+    {
+        return AndWhere(FieldName, comp, value,SqlHelper.GetSqlDataTypeByValue(value));
+    }
+    public SelectBuilder AndWhere(String FieldName,SqlComparators comp, Object value,SqlDataTypes dt)
     {
         if(_where.length()>0)
         {
             _where.append( " AND ");
         }
         
-        _where.append(SqlHelper.GetWhereSql(FieldName,comp,value));
+        _where.append(SqlHelper.GetWhereSql(FieldName,comp,value,dt));
         return this;
     }
     public SelectBuilder From(String From)

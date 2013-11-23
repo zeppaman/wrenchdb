@@ -81,7 +81,9 @@ public class HContext {
                 Logger.getLogger(HContext.class.getName()).log(Level.SEVERE, null, ex);
          }
     }
-      public static HContext Current()
+      
+    
+    public static HContext Current()
     {
         if(_hContext==null)
         {
@@ -155,6 +157,8 @@ public class HContext {
        }
        return null;
     }
+    
+    
     public List ExecuteSelectQuery(Session s,String sqlSelect)
     { 
         try
@@ -168,6 +172,56 @@ public class HContext {
         }
         return null;
     }
+    
+    
+    public int  ExecuteNoResult(String sql) {
+       Session s= this._sessionFactory.openSession();
+        Boolean result=false;
+       try
+       {
+          
+           
+         return ExecuteNoResult(s,sql);
+       }
+       catch(Exception ex)
+       {
+          
+           Logger.getLogger(HContext.class.getName()).log(Level.SEVERE, null, ex);
+       }
+       finally
+       {
+          s.close();
+       }
+       return -1;
+    }
+    public int ExecuteNoResult(Session s,String sql)
+    { 
+         Transaction t=null;
+        try
+        {
+            
+            SQLQuery q=  s.createSQLQuery(sql);
+             t=s.beginTransaction();
+            int results= q.executeUpdate();
+            
+            if(results>0)
+            {
+                t.commit();
+            }
+            else
+            {
+                t.rollback();
+            }
+        }
+        catch(Exception ex)
+        {
+            if(t!=null) t.rollback();
+              Logger.getLogger(HContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
+    
+    
     public Boolean SaveOrUpdate(Session s,Object entity)
     {
         try
@@ -219,6 +273,8 @@ public class HContext {
     private void setConfiguration(Configuration configuration) {
         this._configuration = configuration;
     }
+
+    
     
     
 }

@@ -8,22 +8,13 @@
     <body>
        
       <h1>500</h1> 
-           
+      <h4> Something gone wrong!</h4>
 
-            $Model.getModelName() is great!
-            
-<pre>
-       $Model.getProperties().get("error");
-<br/>
-<br/>
-<br/>
-$Model.get("stacktrace");
-</pre>
-    <table>
+    <table class="table table-bordered">
            #set ($map = $Model.getProperties() )
         #foreach ($mapEntry in $map.entrySet())
-           <tr><td>$mapEntry.key</td>
-            <td><value>$mapEntry.value</td></tr>
+           <tr><td><h4>$mapEntry.key</h4></td>
+            <td><pre>$mapEntry.value</pre></td></tr>
         #end
 
    </table>

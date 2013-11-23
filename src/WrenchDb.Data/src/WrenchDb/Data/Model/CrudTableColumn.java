@@ -19,6 +19,8 @@ package WrenchDb.Data.Model;
 import WrenchDb.Core.Helpers.JSONRenderer;
 import WrenchDb.Core.Interfaces.JSONRenderizzable;
 import WrenchDb.Core.Interfaces.NamedItem;
+import WrenchDb.Data.Enums.SqlDataTypes;
+import WrenchDb.Data.Enums.jqGridEditType;
 
 /**
  *
@@ -31,6 +33,13 @@ implements JSONRenderizzable,NamedItem {
     public String Header="";
     public boolean IsPrimaryKey=false;
     public Integer Width=new Integer(100);
+     /*Edit settings*/
+       public boolean IsEditable=false;
+       public jqGridEditType EditType= jqGridEditType.text;
+       public CrudTableEditOption EditOptions= new CrudTableEditOption();
+       public CrudTableEditRules EditRules= new CrudTableEditRules();
+       public CrudTableColumnFormOptions FormOptions= new CrudTableColumnFormOptions();
+       public SqlDataTypes DbType= SqlDataTypes.Text;
     
     @Override
     public String RenderAsJSON() {
@@ -47,6 +56,23 @@ implements JSONRenderizzable,NamedItem {
       jre.AppendProperty("key", this.IsPrimaryKey);
       jre.AppendProperty("label", this.Header);
       jre.AppendProperty("width", this.Width);
+          /*Edit settings*/
+       jre.AppendProperty("editable",this.IsEditable);
+       if(this.IsEditable)
+       {
+            jre.StartObjectProperty("editoptions");
+                    this.EditOptions.RenderAsJSON(jre);
+            jre.EndObjectProperty();
+            
+            
+            jre.StartObjectProperty("editrules");
+                    this.EditRules.RenderAsJSON(jre);
+            jre.EndObjectProperty();
+            
+            jre.StartObjectProperty("formoptions");
+                    this.FormOptions.RenderAsJSON(jre);
+            jre.EndObjectProperty();
+       }
     }
     
     public String Name="";

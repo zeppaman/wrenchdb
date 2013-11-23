@@ -17,20 +17,24 @@
 package WrenchDb.Data.Servlets;
 
 import WrenchDb.Core.Helpers.JSONHelper;
+import WrenchDb.Core.Helpers.WdbStringHelper;
 import WrenchDb.DAL.Helpers.HContext;
 import WrenchDb.Data.Configuration.CrudTableSet;
-import WrenchDb.Data.Helpers.SelectBuilder;
-import WrenchDb.Data.Model.CrudTable;
-import WrenchDb.Data.Model.CrudTableColumn;
+import WrenchDb.Data.Enums.DataSourceMode;
+import WrenchDb.Data.Enums.SqlComparators;
+import WrenchDb.Data.Helpers.*;
+import WrenchDb.Data.Model.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.activation.DataSource;
 import javax.management.Query;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sun.swing.MenuItemLayoutHelper;
 
 /**
  *
@@ -49,32 +53,26 @@ extends HttpServlet {
             cs.LoadItems();
             
             CrudTable ct= cs.GetByName(req.getParameter("ctable"));
-           
-            SelectBuilder sb= new SelectBuilder();
-            //TODO: avoid double field inclusion
-            for( CrudTableColumn cc:ct.Columns)
+            DataSourceMode mode= GetDataSourceMode(req);
+            
+            switch(mode)
             {
-                    sb.Field(cc.Name);
+                case ADD:
+                     doAdd(ct, req, resp);
+                    break;
+                case DELETE:
+                    doDelete(ct, req, resp);
+                    break;
+                case EDIT:
+                     doEdit(ct, req, resp);
+                    break;
+                case LIST:
+                    doList(ct, req, resp);
+                    break;
+                default:
+                    throw new Exception("DataSourceMode not supported yet");
             }
-            
-            sb.From(ct.TableName);
-            sb.OrderBy(ct.DefaultSortColumnName,ct.DefaultSortColumnOrder);
-            
-           String sql= sb.toString();
-           
-           HContext.Init( req.getServletContext().getRealPath("WEB-INF/wdb_db.properties"));
-            
-           List l= HContext
-                .Current()
-                .ExecuteSelectQuery(sql);
-           
               
-              StringBuilder json = GetJqGridFromList(l,ct);
-            
-             
-             
-              resp.getWriter().write(json.toString());
-              resp.setContentType("application/json");
         }
         catch(Exception err)
         {
@@ -134,6 +132,117 @@ extends HttpServlet {
         json.append("]");
         json.append("}");
         return json;
+    }
+
+    private DataSourceMode GetDataSourceMode(HttpServletRequest req) {
+        if( WdbStringHelper.isBlank(req.getParameter("oper")))
+        {
+            return DataSourceMode.LIST;
+        }else
+        if("add".equals(req.getParameter("oper")))
+        {
+             return DataSourceMode.ADD;
+        }else
+        if("edit".equals(req.getParameter("oper")))
+        {
+             return DataSourceMode.EDIT;
+        }
+        else
+        if("del".equals(req.getParameter("oper")))
+        {
+             return DataSourceMode.DELETE;
+        }
+        return DataSourceMode.LIST;
+        
+    }
+
+    public void doList(CrudTable ct, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try
+        {
+        SelectBuilder sb= new SelectBuilder();
+        //TODO: avoid double field inclusion
+        for( CrudTableColumn cc:ct.Columns)
+        {
+                sb.Field(cc.Name);
+        }
+        
+        sb.From(ct.TableName);
+        //TODO: parse filters and add where conditions
+        sb.OrderBy(ct.DefaultSortColumnName,ct.DefaultSortColumnOrder);
+        
+       String sql= sb.toString();
+       
+       HContext.Init( req.getServletContext().getRealPath("WEB-INF/wdb_db.properties"));
+        
+       List l= HContext
+            .Current()
+            .ExecuteSelectQuery(sql);
+       
+          
+          StringBuilder json = GetJqGridFromList(l,ct);
+        
+         
+         
+          resp.getWriter().write(json.toString());
+          resp.setContentType("application/json");
+          
+        }
+        catch(Exception err)
+        {
+            resp.setStatus(500);            
+            resp.getWriter().append(err.getMessage());
+            resp.sendError(500, err.getMessage());
+        }
+    }
+
+    private void doEdit(CrudTable ct, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        int pkIdx=ct.GetPkIdx();
+        if(pkIdx<0)
+        {
+           throw new Exception("Unable to edit row without pk definition on "+ct.getName());
+        }
+        CrudTableColumn pkColumn= ct.Columns.get(pkIdx);
+        
+        UpdateBuilder ub= new UpdateBuilder();
+        ub.Update(ct.TableName);
+          for(CrudTableColumn ctc: ct.Columns)
+          {
+              if(ctc.IsEditable)
+              {
+                  ub.Field(ctc.Name,req.getParameter(ctc.Name),ctc.DbType);
+              }
+          }
+          ub.AndWhere(pkColumn.Name,SqlComparators.EQUAL,req.getParameter("id"),pkColumn.DbType);
+          int rows=HContext.Current().ExecuteNoResult(ub.toString());
+    }
+
+    private void doDelete(CrudTable ct, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        int pkIdx=ct.GetPkIdx();
+        if(pkIdx<0)
+        {
+           throw new Exception("Unable to edit row without pk definition on "+ct.getName());
+        }
+        CrudTableColumn pkColumn= ct.Columns.get(pkIdx);
+        
+        DeleteBuilder db= new DeleteBuilder();
+        db.From(ct.TableName);
+        db.AndWhere(pkColumn.Name,SqlComparators.EQUAL,req.getParameter("id"),pkColumn.DbType);
+         int rows=HContext.Current().ExecuteNoResult(db.toString());
+    }
+
+    private void doAdd(CrudTable ct, HttpServletRequest req, HttpServletResponse resp) {
+        
+        InsertBuilder ib= new InsertBuilder();
+        ib.Into(ct.TableName);
+        for(CrudTableColumn ctc: ct.Columns)
+        {
+            if(ctc.IsEditable)
+            {
+                ib.Field(ctc.Name,req.getParameter(ctc.Name),ctc.DbType);
+            }
+        }
+        int rows=HContext.Current().ExecuteNoResult(ib.toString());
+        
     }
 
     

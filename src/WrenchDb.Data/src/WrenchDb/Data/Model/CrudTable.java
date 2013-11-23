@@ -22,6 +22,7 @@ import WrenchDb.Core.Interfaces.HtmlRenderizzable;
 import WrenchDb.Core.Interfaces.JSONRenderizzable;
 import WrenchDb.Core.Interfaces.NamedItem;
 import WrenchDb.Data.Enums.SqlOrderDirection;
+import WrenchDb.Data.Enums.jqGridEditType;
 import WrenchDb.Data.Model.Enums.*;
 import WrenchDb.Data.Model.Lists.CrudColumnList;
 import WrenchDb.MVC.BaseClasses.Model.ModelBase;
@@ -38,7 +39,9 @@ implements JSONRenderizzable, NamedItem, HtmlRenderizzable {
      
     
        public CrudColumnList Columns= new CrudColumnList();
-       public String   DataUrl;
+       public String DataUrl;
+       public String EditUrl;
+       
        public CrudTableDataType DataType;
        public Integer InitialRowCount =new Integer(20);
        public List<Integer> RowCountList =new ArrayList<Integer>();
@@ -47,7 +50,17 @@ implements JSONRenderizzable, NamedItem, HtmlRenderizzable {
        public SqlOrderDirection DefaultSortColumnOrder= SqlOrderDirection.ASC;
        public String Title="";
        public String TableName;
-      
+       public boolean AllowEdit;
+       public boolean AllowAdd;
+       public boolean AllowDelete;
+       public boolean AllowSearch;
+       public boolean AllowView;
+       public String error;
+       
+       
+       
+    
+       
        /*
      
       pager: jQuery('#gridpager'),
@@ -66,6 +79,13 @@ implements JSONRenderizzable, NamedItem, HtmlRenderizzable {
            RowCountList.add(200);
            RowCountList.add(1000);
            
+           
+            AllowEdit=false;
+            AllowAdd=false;
+            AllowDelete=true;
+            AllowSearch=true;
+            AllowView=true;
+
        }
         
         public String getPagerId()
@@ -86,14 +106,16 @@ implements JSONRenderizzable, NamedItem, HtmlRenderizzable {
     @Override
     public void RenderAsJSON(JSONRenderer jre) {
       jre.AppendProperty("url", DataUrl);
+      jre.AppendPropertyIfValued("editurl",EditUrl);
       jre.AppendProperty("datatype", this.DataType);
       jre.AppendProperty("mtype","GET");
       jre.AppendProperty("rowNum", InitialRowCount);
       jre.AppendProperty("viewrecords", "true");
       jre.AppendPropertyIfValued("sortname", this.DefaultSortColumnName);
       jre.AppendProperty("caption", this.Title);
+      jre.AppendProperty("height","100%");
       jre.AppendProperty("autowidth",true);
-      jre.AppendProperty("autowidth",true);
+      jre.AppendPropertyIfValued("error", this.error);
       jre.AppendProperty("shrinkToFit",true);
       jre.WriteRaw(",pager:jQuery('#"+this.getPagerId()+"')");
       if(DefaultSortColumnName!=null)
@@ -129,6 +151,9 @@ implements JSONRenderizzable, NamedItem, HtmlRenderizzable {
                 ct.RenderAsJSON(jre);
             jre.EndObjectProperty();
         }
+        
+        
+    
        jre.EndArrayProperty(); //Ends colModel
       
     }
@@ -175,7 +200,12 @@ implements JSONRenderizzable, NamedItem, HtmlRenderizzable {
       sb.RenderBeginTag("script");
       sb.WriteHtml("jQuery(document).ready(function(){ ");
       sb.WriteHtml("jQuery('#"+this.getTableId()+"').jqGrid("+
-              this.RenderAsJSON()+").navGrid('#"+this.getPagerId()+"');");
+              this.RenderAsJSON()+") .jqGrid('navGrid','#"+this.getPagerId()+"',null,"
+              +AllowEdit+","
+              +AllowAdd+","
+              +AllowDelete+","
+              +AllowSearch+","
+              +AllowView+");");
        sb.WriteHtml("});");
       sb.RenderEndTag();
       

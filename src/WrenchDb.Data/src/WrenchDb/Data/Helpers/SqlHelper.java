@@ -20,9 +20,11 @@ import WrenchDb.Data.Enums.SqlComparators;
 import static WrenchDb.Data.Enums.SqlComparators.BETWEEN;
 import static WrenchDb.Data.Enums.SqlComparators.CONTAINS;
 import static WrenchDb.Data.Enums.SqlComparators.EQUAL;
+import WrenchDb.Data.Enums.SqlDataTypes;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.lang3.text.FormattableUtils;
-
 
 /**
  *
@@ -30,59 +32,99 @@ import org.apache.commons.lang3.text.FormattableUtils;
  */
 public class SqlHelper {
 
-    public static String GetFieldName(String fieldName )
-    {
-           return ("\""+fieldName+"\"");
+    public static String GetFieldName(String fieldName) {
+        return ("\"" + fieldName + "\"");
     }
-    
-    public static String GetWhereSqlTemplate(SqlComparators comp )
-    {
-        switch(comp)
-        {
-            case BETWEEN: return " %s BETWEEN %s AND %s" ;
-            case CONTAINS: return " %s LIKE %s'"  ;
-            case EQUAL: return " %s = %s"  ;
+
+    public static String GetWhereSqlTemplate(SqlComparators comp) {
+        switch (comp) {
+            case BETWEEN:
+                return " %s BETWEEN %s AND %s";
+            case CONTAINS:
+                return " %s LIKE %s'";
+            case EQUAL:
+                return " %s = %s";
             default:
                 return null;
         }
-        
+
     }
-    
-    public static String GetWhereSql(String FieldName, SqlComparators comp, Object Value) {
-
-        String literalValue="NULL";
-        
-        if(Value!=null)
-        {
-             switch(Value.getClass().getName())
-            {
-                 case "java.lang.String":literalValue= "'"+Value.toString()+"'" ;
-                 break;
-                 case "java.lang.Double":               
-                     literalValue=Value.toString() ;
-                 break;
-                 case "java.lang.Float": literalValue=Value.toString() ;
-                 break;
-                 case "java.lang.Integer": literalValue=Value.toString() ;
-                 break;
-                 case "java.lang.Long": literalValue=Value.toString() ;
-                  break;
-                 case "java.lang.Boolean": literalValue=Value.toString() ;
-                 break;
-                 case "java.util.Date": 
-                     literalValue="CONVERT('"+((Date)Value).toString()+"')";
-                     break;
-
-                default:
-                    literalValue=Value.toString();
-           
-                
+public static String GetWhereSql(String FieldName, SqlComparators comp, Object Value) {
+  SqlDataTypes dt= GetSqlDataTypeByValue(Value);
+  return GetWhereSql(FieldName,comp,Value,dt);
+}
+    public static String GetWhereSql(String FieldName, SqlComparators comp, Object Value,  SqlDataTypes dt) {
+        String literalValue = GetSqlValue(Value,dt);
+        return String.format(GetWhereSqlTemplate(comp),
+                GetFieldName(FieldName), literalValue);
+    }
+ public static String GetSqlValue(Object Value) {
+     if (Value == null) {
+            return "NULL";
         }
+    SqlDataTypes dt = GetSqlDataTypeByValue(Value);
+    return GetSqlValue(Value,dt);
+ }
+ 
+    public static String GetSqlValue(Object Value,SqlDataTypes dt) {
+        if (Value == null) {
+            return "NULL";
+        }
+
+        String literalValue = "NULL";
         
-       
+
+        switch (dt) {
+            case Boolean:                
+                    literalValue = Value.toString();                
+                break;
+            case Date:
+                if(Value instanceof String)
+                {
+                    literalValue = "CONVERT('" +Value + "')";
+                }
+                else
+                {
+                    literalValue = "CONVERT('" + ((Date) Value).toString() + "')";
+                }
+                break;
+            case Integer:
+                literalValue = Value.toString();
+                break;
+            case Number:
+                literalValue = Value.toString();
+                break;
+            case Text:
+                literalValue = "'" + Value.toString() + "'";
+                break;
+            case Time: literalValue =  "CONVERT('" + ((Date) Value).toString() + "')";
+                break;
+        }
+        return literalValue;
     }
-         return String.format(GetWhereSqlTemplate(comp), 
-                GetFieldName(FieldName),literalValue);
+
+    public static SqlDataTypes GetSqlDataTypeByValue(Object Value) {
+
+
+        switch (Value.getClass().getName()) {
+            case "java.lang.String":
+                return SqlDataTypes.Text;
+            case "java.lang.Double":
+                return SqlDataTypes.Number;
+            case "java.lang.Float":
+                return SqlDataTypes.Number;
+            case "java.lang.Integer":
+                return SqlDataTypes.Integer;
+            case "java.lang.Long":
+                return SqlDataTypes.Integer;
+            case "java.lang.Boolean":
+                return SqlDataTypes.Boolean;
+            case "java.util.Date":
+                return SqlDataTypes.DateTime;
+            default:
+                Logger.getLogger(SqlHelper.class.getName()).log(Level.SEVERE, "GetSqlDataTypeByValue: type unhandled:" + Value.getClass().getName());
+                return SqlDataTypes.Text;
+        }
+
     }
-    
 }

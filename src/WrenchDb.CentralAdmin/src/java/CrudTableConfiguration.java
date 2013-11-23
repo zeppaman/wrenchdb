@@ -16,7 +16,9 @@
  */
 import WrenchDb.Core.Annotations.ItemAppenderConfigurator;
 import WrenchDb.Core.Configuration.ItemAppendingConfiguration;
+import WrenchDb.Data.Enums.SqlDataTypes;
 import WrenchDb.Data.Enums.SqlOrderDirection;
+import WrenchDb.Data.Enums.jqGridEditType;
 import WrenchDb.Data.Helpers.CrudTableBuilder;
 import WrenchDb.Data.Model.CrudTable;
 import WrenchDb.Data.Model.CrudTableColumn;
@@ -39,13 +41,22 @@ public class CrudTableConfiguration
             {
              
                 
-              CrudTableBuilder ct= new CrudTableBuilder("wdb_application","application_name", SqlOrderDirection.ASC,"Applications","wdb_application");
+              CrudTableBuilder ctb= new CrudTableBuilder("wdb_application","application_name", SqlOrderDirection.ASC,"Applications","wdb_application");
               
-              ct.AddColumn("ApplicationID",true,true,"application_id",100);
-              ct.AddColumn("Application Name","application_name");
-              ct.AddColumn("Host Name","application_hostname");
               
-              configuration.add(ct.getCrudTable());
+                       ctb
+                      .AllowEdit()
+                      .AllowDelete()
+                      .AllowView()
+                      .AddColumn("ApplicationID",true,true,"application_id",100, SqlDataTypes.Integer)
+                      .AddColumn("Application Name","application_name", SqlDataTypes.Text)
+                      .AddColumn("Host Name","application_hostname", SqlDataTypes.Text)
+                      .EditColumn("application_name",true,jqGridEditType.text,true,true)
+                      .EditColumn("application_hostname",true,jqGridEditType.text,true,true);
+              
+              CrudTable ct=ctb.getCrudTable();
+              
+              configuration.add(ct);
                 
             }
        
