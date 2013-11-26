@@ -116,7 +116,10 @@ implements JSONRenderizzable, NamedItem, HtmlRenderizzable {
       jre.AppendProperty("caption", this.Title);
       jre.AppendProperty("height","100%");
       jre.AppendProperty("autowidth",true);
-      jre.AppendPropertyIfValued("error", this.error);
+      if(this.error!=null)
+      {
+              jre.WriteRaw(", error: "+ this.error);
+      }
       jre.AppendProperty("shrinkToFit",true);
       jre.WriteRaw(",pager:jQuery('#"+this.getPagerId()+"')");
       if(DefaultSortColumnName!=null)

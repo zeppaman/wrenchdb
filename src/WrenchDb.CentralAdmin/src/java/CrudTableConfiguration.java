@@ -171,7 +171,7 @@ public class CrudTableConfiguration
                         .AddColumn("Label","sitemap_label", SqlDataTypes.Text,JqGridFieldType.SingleLineText)
                         .EditColumn("sitemap_label",true,true)                        
                         .AddColumn("Url","sitemap_url", SqlDataTypes.Text,JqGridFieldType.Url)
-                        .EditAsUrl("sitemap_url","Url",true) 
+                       // .EditAsUrl("sitemap_url","Url",true) 
                         .AddColumn("Config","config_data", SqlDataTypes.Text,JqGridFieldType.MultiLineText)
                         .EditColumn("config_data",false,false)
                         //SELF JOIN

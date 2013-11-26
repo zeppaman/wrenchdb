@@ -46,10 +46,9 @@ public class CrudController extends ControllerBase {
          ActionResult r= new ActionResult("DataGrid","OneColumn",new ModelBase());
  
          
-         CrudTableSet cs= new CrudTableSet();
-         cs.LoadItems();
+         
         r.Model= new ModelBase();
-        CrudTable ct=cs.GetByName(model.get("id"));
+        CrudTable ct=CrudTableSet.Current().GetByName(model.get("id"));
         r.Model.Properties.put("ctable",ct );
         r.Model.Properties.put("title", ct.Title);
        

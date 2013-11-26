@@ -52,7 +52,7 @@ public class CrudTableBuilder {
         ct.TableName=TableName;
         ct.DataUrl="/WrenchDb.CentralAdmin/handlers/datahandler?ctable="+InstanceId;
         ct.EditUrl="/WrenchDb.CentralAdmin/handlers/datahandler?mode=edit&ctable="+InstanceId;
-        ct.error="function (xHR, status, err) { alert(\"ERROR: \" + status + \", \" + err);}";
+        ct.error="function (xHR, status, err) { \n\nalert(\"ERROR: \" + status + \", \" + err);}";
         
     }
     

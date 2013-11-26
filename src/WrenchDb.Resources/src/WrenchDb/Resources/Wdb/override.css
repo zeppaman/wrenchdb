@@ -24,3 +24,7 @@ div.ui-jqgrid-titlebar
 }
 
 
+.EditTable input,.EditTable select,.EditTable checkbox,.EditTable textarea
+{
+    min-width:300px;
+}

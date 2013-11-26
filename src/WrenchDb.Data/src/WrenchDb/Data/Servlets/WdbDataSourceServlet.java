@@ -52,10 +52,9 @@ extends HttpServlet {
         throws ServletException, IOException {
         try 
         {
-            CrudTableSet cs= new CrudTableSet();
-            cs.LoadItems();
             
-            CrudTable ct= cs.GetByName(req.getParameter("ctable"));
+            
+            CrudTable ct= CrudTableSet.Current().GetByName(req.getParameter("ctable"));
             DataSourceMode mode= GetDataSourceMode(req);
             
             switch(mode)
@@ -83,6 +82,8 @@ extends HttpServlet {
         catch(Exception err)
         {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,"WdbDataSourceServlet.execute()",err);
+           
+            resp.sendError(500, err.getMessage());
         }
     }
 
@@ -203,8 +204,7 @@ extends HttpServlet {
         
        String sql= sb.toString();
        
-       //TODO: FIX IN GLOBAL CONFIGURATION
-       HContext.Init( req.getServletContext().getRealPath("WEB-INF/wdb_db.properties"));
+      
         
        List l= HContext
             .Current()
@@ -260,6 +260,10 @@ extends HttpServlet {
         db.From(ct.TableName);
         db.AndWhere(pkColumn.Name,SqlComparators.EQUAL,req.getParameter("id"),pkColumn.DbType);
          int rows=HContext.Current().ExecuteNoResult(db.toString());
+         if(rows<1)
+         {
+             throw new Exception("Unable to perform delete operation. see log for more information.");
+         }
     }
 
     private void doAdd(CrudTable ct, HttpServletRequest req, HttpServletResponse resp) {
@@ -273,8 +277,7 @@ extends HttpServlet {
                 ib.Field(ctc.Name,req.getParameter(ctc.Name),ctc.DbType);
             }
         }
-        //TODO: FIX IN GLOBAL CONFIGURATION
-       HContext.Init( req.getServletContext().getRealPath("WEB-INF/wdb_db.properties"));
+     
         int rows=HContext.Current().ExecuteNoResult(ib.toString());
         
     }
@@ -289,8 +292,7 @@ extends HttpServlet {
        sb.From(req.getParameter("ext_table"));
        sb.OrderBy(req.getParameter("ext_label"));
        
-        //TODO: FIX IN GLOBAL CONFIGURATION
-       HContext.Init( req.getServletContext().getRealPath("WEB-INF/wdb_db.properties"));
+   
        List l= HContext
             .Current()
             .ExecuteSelectQuery(sb.toString());

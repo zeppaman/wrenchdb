@@ -36,4 +36,16 @@ extends ItemAppendingConfigurationContainer<CrudTable> {
         return CrudTable.class;
     }
     
+    private static CrudTableSet _current=null;
+    
+    public static  CrudTableSet Current()
+    {
+        if(_current==null)
+        {
+            _current= new CrudTableSet();
+            _current.LoadItems();
+        }
+        return _current;
+    }
+    
 }
