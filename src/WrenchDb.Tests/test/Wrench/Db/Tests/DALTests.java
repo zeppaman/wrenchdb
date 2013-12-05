@@ -16,11 +16,14 @@
  */
 package Wrench.Db.Tests;
 
+import Wrench.Db.Tests.Helpers.Utils;
 import WrenchDb.DAL.Entities.WdbApplication;
 import WrenchDb.DAL.Helpers.HContext;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.ws.spi.http.HttpContext;
 import org.hibernate.Session;
 import org.junit.Test;
@@ -32,26 +35,17 @@ import static org.junit.Assert.*;
  */
 public class DALTests {
     
-    public DALTests() {
-    }
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
+ 
     
     
-     @Test
-    public void InitHContext()
-    {
-        //relative path match WtrenchDb.Test folder. Config files are inside test folder
-        HContext.Init("test/wdb_db.properties");
-        assertTrue( HContext.Current().getProperties().size()>0);
-       
-    }
+    
+   
      
      
      @Test
      public void DoSelect()
      {
-          InitHContext();
+          Utils.InitHContext();
         List l= HContext
                 .Current()
                 .ExecuteSelectQuery(
@@ -62,7 +56,7 @@ public class DALTests {
     @Test
     public void OrmInit()
     {
-       InitHContext();
+        Utils.InitHContext();
         WdbApplication app= new WdbApplication();
         
         app.setApplicationHostname("app.host.loc2");
@@ -81,7 +75,7 @@ public class DALTests {
      @Test
     public void QueryInit()
     {
-         InitHContext();
+           Utils.InitHContext();
          Session s=HContext.Current().getSessionFactory().openSession();
          WdbApplication app=(WdbApplication)s.createCriteria(WdbApplication.class).uniqueResult();
          s.close();

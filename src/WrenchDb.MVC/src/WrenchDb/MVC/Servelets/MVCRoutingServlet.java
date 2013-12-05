@@ -85,6 +85,7 @@ public class MVCRoutingServlet extends HttpServlet {
         } catch (Exception ex) {
             Logger.getLogger(MVCRoutingServlet.class.getName()).log(Level.SEVERE, null, ex);
             HashMap hm = new HashMap();
+           
             hm.put("error", ex.getClass() + " " + ex.getMessage());
             String s = "";
             StackTraceElement[] ele = ex.getStackTrace();
@@ -95,6 +96,7 @@ public class MVCRoutingServlet extends HttpServlet {
             }
             hm.put("stacktrace", s);
             
+          
             
             ar= new ActionResult("500","OneColumn",RequestModel.CreateRequestModel(hm, req));
   

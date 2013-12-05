@@ -16,6 +16,8 @@
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="/WrenchDb.CentralAdmin/CrudController/ViewGrid/wdb_application">Applications</a></li>
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="/WrenchDb.CentralAdmin/CrudController/ViewGrid/wdb_settings">Settings</a></li>
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="/WrenchDb.CentralAdmin/CrudController/ViewGrid/wdb_sitemap">Sitemap</a></li>
+<li role="presentation"><a role="menuitem" tabindex="-1" href="/WrenchDb.CentralAdmin/CrudController/ViewGrid/wdb_databasetype">Databases</a></li>
+<li role="presentation"><a role="menuitem" tabindex="-1" href="/WrenchDb.CentralAdmin/CrudController/ViewGrid/wdb_servertype">Servers</a></li>
               </ul>
             </li>
             <li class="dropdown">

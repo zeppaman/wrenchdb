@@ -4,7 +4,9 @@
  */
 package WrenchDb.DAL.Helpers;
 
+import WrenchDb.Core.Helpers.PropertiesHelper;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.List;
@@ -29,30 +31,36 @@ public class HContext {
 
     private   Configuration _configuration;
     
-    
-    public static void Init(String path)  {
+     public static void Init(String path) throws IOException  {
+
+            Properties props= new Properties();
+            props.load(new FileInputStream(path));
+            Init(props);
+        }
+     
+    public static void Init(Properties  props)  {
         try
         {
             _hContext = new HContext();                
-            _hContext.getProperties().load(new FileInputStream(path));
+           PropertiesHelper.MergeProperties( _hContext.getProperties(),props);
             
             //init Hibernate using properties entry;
             
             //set properties
           AnnotationConfiguration cfg=  new AnnotationConfiguration();
           String key="";
-          Enumeration<Object> props=_hContext.getProperties().keys();
-           while(props.hasMoreElements())
+          Enumeration<Object> propsKeys=_hContext.getProperties().keys();
+           while(propsKeys.hasMoreElements())
            {
-               key=(String)props.nextElement();
+               key=(String)propsKeys.nextElement();
                if(key.startsWith("hibernate."))
                {
                    cfg.setProperty(key, _hContext.getProperties().getProperty(key));
                }
            }
-           //add entities
            
-           cfg.configure();
+           
+      
            if(_hContext.getProperties().containsKey("wdb.entitypackages"))               
            {
             String[] packages= _hContext.getProperties().getProperty("wdb.entitypackages").split(",");

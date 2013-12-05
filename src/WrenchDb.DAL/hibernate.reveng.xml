@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd">
+<hibernate-reverse-engineering>
+  <schema-selection match-catalog="wdb_ca" match-schema="public"/>
+  <table-filter match-name="wdb_changescript"/>
+  <table-filter match-name="wdb_property"/>
+  <table-filter match-name="wdb_entity"/>
+  <table-filter match-name="wdb_servertype"/>
+  <table-filter match-name="wdb_property_type"/>
+  <table-filter match-name="wdb_databasetype"/>
+  <table-filter match-name="wdb_application"/>
+  <table-filter match-name="wdb_settings"/>
+  <table-filter match-name="wdb_sitemap"/>
+</hibernate-reverse-engineering>

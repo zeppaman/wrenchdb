@@ -53,7 +53,23 @@ public class CrudTableConfiguration
                .AddColumn("Application Name","application_name", SqlDataTypes.Text,JqGridFieldType.SingleLineText)
                .AddColumn("Host Name","application_hostname", SqlDataTypes.Text,JqGridFieldType.SingleLineText)
                .EditColumn("application_name",true,true)
-               .EditAsUrl("application_hostname","Host Name",true);
+                        .AddColumn("Server Username","server_user", SqlDataTypes.Text,JqGridFieldType.SingleLineText)
+               .EditColumn("server_user",true,true)
+                        .AddColumn("Sever Password","server_password", SqlDataTypes.Text,JqGridFieldType.Password)
+               .EditColumn("server_password",true,true)
+               .EditAsUrl("application_hostname","Host Name",true)
+                        .LookupColumn("Server", "servertype_id", SqlDataTypes.Integer,true,true,
+                         "wdb_servertype","servertype_id","servertype_name")
+                         .EditAsLookup("servertype_id","Server",true)
+                        .LookupColumn("Database", "databasetype_id", SqlDataTypes.Integer,true,true,
+                         "wdb_databasetype","databasetype_id","databasetype_name")
+                         .EditAsLookup("databasetype_id","Server",true)
+               .AddColumn("Jdbc","database_jdbc", SqlDataTypes.Text,JqGridFieldType.SingleLineText)
+               .EditColumn("database_jdbc",true,true)          
+               .AddColumn("Db Username","database_username", SqlDataTypes.Text,JqGridFieldType.SingleLineText)
+               .EditColumn("database_username",true,true)          
+                .AddColumn("Db Password","database_password", SqlDataTypes.Text,JqGridFieldType.Password)
+               .EditColumn("database_password",true,true);
               
                 configuration.add(ctb.getCrudTable());
                 
@@ -191,6 +207,24 @@ public class CrudTableConfiguration
                 .AddPK("property_type",SqlDataTypes.Integer)  
                 .AddColumn("Name","property_type_name", SqlDataTypes.Text,JqGridFieldType.SingleLineText)
                 .AddColumn("Desc","property_type_desc", SqlDataTypes.Text,JqGridFieldType.MultiLineText);
+                    configuration.add(ctb.getCrudTable());
+                    
+                    
+                    
+                    ctb= new CrudTableBuilder("wdb_databasetype","databasetype_name", SqlOrderDirection.ASC,
+                            "Databases","wdb_databasetype");
+                   ctb
+                .AddPK("databasetype_id",SqlDataTypes.Integer)  
+                .AddColumn("Name","databasetype_name", SqlDataTypes.Text,JqGridFieldType.SingleLineText)
+                .AddColumn("Deployer","databasetype_deployer", SqlDataTypes.Text,JqGridFieldType.MultiLineText);
+                    configuration.add(ctb.getCrudTable());
+                    
+                    ctb= new CrudTableBuilder("wdb_servertype","servertype_name", SqlOrderDirection.ASC,
+                            "Server","wdb_servertype");
+                   ctb
+                .AddPK("servertype_id",SqlDataTypes.Integer)  
+                .AddColumn("Name","servertype_name", SqlDataTypes.Text,JqGridFieldType.SingleLineText)
+                .AddColumn("Deployer","servertype_deployername", SqlDataTypes.Text,JqGridFieldType.MultiLineText);
                     configuration.add(ctb.getCrudTable());
             }
        

@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import WrenchDb.Data.Configuration.CrudTableSet;
 import WrenchDb.Data.Model.CrudTable;
 import WrenchDb.MVC.Annotations.Action;
@@ -21,54 +22,84 @@ import WrenchDb.MVC.Annotations.Controller;
 import WrenchDb.MVC.BaseClasses.ActionResult;
 import WrenchDb.MVC.BaseClasses.ControllerBase;
 import WrenchDb.MVC.BaseClasses.Model.ModelBase;
+import org.codehaus.cargo.container.ContainerType;
+import org.codehaus.cargo.container.InstalledLocalContainer;
+import org.codehaus.cargo.container.configuration.ConfigurationType;
+import org.codehaus.cargo.container.configuration.LocalConfiguration;
+import org.codehaus.cargo.container.deployable.Deployable;
+import org.codehaus.cargo.container.deployable.DeployableType;
+import org.codehaus.cargo.container.deployer.Deployer;
+import org.codehaus.cargo.container.tomcat.Tomcat4xRemoteDeployer;
+import org.codehaus.cargo.container.tomcat.TomcatCopyingInstalledLocalDeployer;
+import org.codehaus.cargo.container.tomcat.TomcatExistingLocalConfiguration;
+import org.codehaus.cargo.container.tomcat.TomcatManager7x8xInstalledLocalDeployer;
+import org.codehaus.cargo.container.tomcat.TomcatWAR;
+import org.codehaus.cargo.generic.DefaultContainerFactory;
+import org.codehaus.cargo.generic.configuration.ConfigurationFactory;
+import org.codehaus.cargo.generic.configuration.DefaultConfigurationFactory;
+import org.codehaus.cargo.generic.deployable.DefaultDeployableFactory;
+import org.codehaus.cargo.generic.deployable.DeployableFactory;
 
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
-
-
-
-
-@Controller ( 
-         ControllerName="DefaultController"
-        )
+@Controller(
+        ControllerName = "DefaultController")
 public class DefaultController extends ControllerBase {
 
-   
 //    @Override
 //    public   String getName()
 //    {
 //        return "DeafultController";
 //    }
-   
-   
     @Action
-    public ActionResult Index(ModelBase model)
-    {
-        ActionResult r= new ActionResult("default","OneColumn",new ModelBase());
-        
-        r.Model= new ModelBase();
+    public ActionResult Index(ModelBase model) {
+        ActionResult r = new ActionResult("default", "OneColumn", new ModelBase());
+
+        r.Model = new ModelBase();
         r.Model.Properties.put("id", "MODIFICATO");
-        r.Model.Properties.put("link","/TestNotation/default/Prova/123");
-        
+        r.Model.Properties.put("link", "/TestNotation/default/Prova/123");
+
+
+
+//       
+//  Deployable war = new TomcatWAR("C:\\temp\\sample.war");
+//
+//        ConfigurationFactory configurationFactory =
+//                new DefaultConfigurationFactory();
+//        
+//        LocalConfiguration configuration = new TomcatExistingLocalConfiguration("C:\\Users\\DanieleFontani\\AppData\\Roaming\\NetBeans\\7.3.1\\apache-tomcat-7.0.34.0_base");
+//        configuration.addDeployable(war);
+//        
+//
+//        InstalledLocalContainer container =
+//                (InstalledLocalContainer) new DefaultContainerFactory().createContainer(
+//                "tomcat7x", ContainerType.INSTALLED, configuration);
+//        container.setHome("C:\\Users\\DanieleFontani\\AppData\\Roaming\\NetBeans\\7.3.1\\apache-tomcat-7.0.34.0_base");
+//         
+//      
+//        DeployableFactory factory = new DefaultDeployableFactory();
+//         war = factory.createDeployable(container.getId(), "C:\\temp\\sample.war",
+//            DeployableType.WAR);
+//        
+//            
+//       Deployer deployer = new TomcatCopyingInstalledLocalDeployer(container);
+//       
+//       deployer.deploy(war);
+//       container.start();
+//       container.stop();
+//
         return r;
-                
+
     }
-    
+
     @Action
-    public ActionResult Prova(ModelBase model)
-    {
-         ActionResult r= new ActionResult("ok","OneColumn",new ModelBase());
- 
-        r.Model= new ModelBase();
+    public ActionResult Prova(ModelBase model) {
+        ActionResult r = new ActionResult("ok", "OneColumn", new ModelBase());
+
+        r.Model = new ModelBase();
         r.Model.Properties.put("id", "MODIFICATO");
         return r;
     }
-    
-    
-   
-    
-     
 }
