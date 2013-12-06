@@ -46,6 +46,7 @@ implements JSONRenderizzable,NamedItem {
     public String LookupId= null;
     public String LookupDesc= null;
     public String ColumnName=null;
+    public String Expression=null;
     
     @Override
     public String RenderAsJSON() {

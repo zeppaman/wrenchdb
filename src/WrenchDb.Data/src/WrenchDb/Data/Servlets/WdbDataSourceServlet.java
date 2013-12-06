@@ -174,18 +174,26 @@ extends HttpServlet {
             
         SelectBuilder sb= new SelectBuilder();
         //TODO: avoid double field inclusion
+        //TODO: introduce filed quoe
         String ColName=null;
         
         for( CrudTableColumn cc:ct.Columns)
         {
             
             ColName=(cc.ColumnName==null)?cc.Name:cc.ColumnName;
-            if(!ColName.contains("."))
+            
+            
+            
+            if(cc.FieldType==JqGridFieldType.Expression)
+            {
+                 sb.Field(" ( "+cc.Expression+" ) ",ColName);
+            }
+            else
+            {
+                if(!ColName.contains("."))
                 ColName=ct.TableName+"."+ColName;
-            
-            
                 sb.Field(ColName);
-           
+            }
         }
         
         sb.From(ct.TableName);

@@ -42,12 +42,17 @@ public class ModelBase {
     }
      
      public HashMap Properties= new HashMap();
+     public HashMap StaticProperties= new HashMap();
 
     /**
      * @return the Properties
      */
     public HashMap getProperties() {
         return Properties;
+    }
+    
+     public HashMap getStaticProperties() {
+        return StaticProperties;
     }
 
     

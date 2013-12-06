@@ -105,7 +105,7 @@ public class WdbPageManager {
     {
         try
         {
-         HtmlHelper.RenderView(getLayoutName(), getModel(), _servletRespCtx.getWriter(), _velocityCtx, _servletReqCtx);
+            HtmlHelper.RenderView(getLayoutName(), getModel(), _servletRespCtx.getWriter(), _velocityCtx, _servletReqCtx);
         }
         catch(Exception err)
         {

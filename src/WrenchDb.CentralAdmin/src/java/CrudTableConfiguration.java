@@ -69,7 +69,9 @@ public class CrudTableConfiguration
                .AddColumn("Db Username","database_username", SqlDataTypes.Text,JqGridFieldType.SingleLineText)
                .EditColumn("database_username",true,true)          
                 .AddColumn("Db Password","database_password", SqlDataTypes.Text,JqGridFieldType.Password)
-               .EditColumn("database_password",true,true);
+               .EditColumn("database_password",true,true)
+                .AddColumn("Details","link", SqlDataTypes.Text,JqGridFieldType.Expression)
+                .Expression("link","'<a href=''/WrenchDb.CentralAdmin/DefaultController/ViewActionDetails/'||application_id||''' >details</a>'");
               
                 configuration.add(ctb.getCrudTable());
                 

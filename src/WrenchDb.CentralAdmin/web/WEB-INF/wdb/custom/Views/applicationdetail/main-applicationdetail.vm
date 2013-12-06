@@ -1,0 +1,65 @@
+<h1>Application Detail</h1> 
+#set ($app=$Model.getProperties().get("application"))
+#set ($rels=$Model.getProperties().get("releases"))
+Nome:$app.getApplicationName()<br/>
+HostName:$app.getApplicationHostname()<br/>
+
+<ul class="nav nav-tabs">
+  <li><a href="#releases" data-toggle="tab">Releases</a></li>
+  <li><a href="#changes" data-toggle="tab">Database Changes</a></li>
+  <li><a href="#messages" data-toggle="tab">Code</a></li>
+  <li><a href="#settings" data-toggle="tab">Settings</a></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane active" id="releases">
+
+
+            <h3>Releases</h3>
+
+
+            <table class="table table-bordered">
+            <tr>
+            <td>#</td>
+            <td>Version</td>
+            <td>FullVersion</td>
+            <td>MemoCode</td>
+            <td>Database Version</td>
+            <td>Relased On</td>
+            <td>Actions</td>
+            </tr>
+            #foreach( $rel in $rels )
+               <tr>
+            <td>
+                     $rel.getWdbReleaseId()
+              </td>
+             <td>
+                     $rel.getReleaseVersion()
+              </td>
+            <td>
+                     $rel.getReleaseFullversion()
+            </td>
+            <td>
+                     $rel.getReleaseMemocode()
+            </td>
+            <td>
+                     $rel.getDatabaseVersion()
+            </td>
+            <td>
+                     $rel.getReleasedOn()
+            </td>
+            <td>
+                     <a href="#" class="btn btn-warning" >Deploy</a>
+            </td>
+             </tr>
+            #end
+            </table>
+    </div>
+    <div class="tab-pane" id="changes">
+    </div>
+    <div class="tab-pane" id="messages">
+    </div>
+    <div class="tab-pane" id="settings">
+    </div>
+</div>

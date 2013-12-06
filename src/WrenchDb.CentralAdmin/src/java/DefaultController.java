@@ -15,6 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import WrenchDb.DAL.Entities.WdbApplication;
+import WrenchDb.DAL.Entities.WdbRelease;
+import WrenchDb.DAL.Helpers.HContext;
 import WrenchDb.Data.Configuration.CrudTableSet;
 import WrenchDb.Data.Model.CrudTable;
 import WrenchDb.MVC.Annotations.Action;
@@ -22,6 +25,8 @@ import WrenchDb.MVC.Annotations.Controller;
 import WrenchDb.MVC.BaseClasses.ActionResult;
 import WrenchDb.MVC.BaseClasses.ControllerBase;
 import WrenchDb.MVC.BaseClasses.Model.ModelBase;
+import WrenchDb.MVC.BaseClasses.Model.RequestModel;
+import java.util.List;
 import org.codehaus.cargo.container.ContainerType;
 import org.codehaus.cargo.container.InstalledLocalContainer;
 import org.codehaus.cargo.container.configuration.ConfigurationType;
@@ -39,6 +44,8 @@ import org.codehaus.cargo.generic.configuration.ConfigurationFactory;
 import org.codehaus.cargo.generic.configuration.DefaultConfigurationFactory;
 import org.codehaus.cargo.generic.deployable.DefaultDeployableFactory;
 import org.codehaus.cargo.generic.deployable.DeployableFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 
 /*
  * To change this template, choose Tools | Templates
@@ -102,4 +109,25 @@ public class DefaultController extends ControllerBase {
         r.Model.Properties.put("id", "MODIFICATO");
         return r;
     }
+    
+      @Action
+    public ActionResult ViewActionDetails(ModelBase model) {
+        ActionResult r = new ActionResult("applicationdetail", "OneColumn", new ModelBase());
+      long applicationId=Long.parseLong(model.Properties.get("id").toString());
+        WdbApplication app= HContext.Current().Get(WdbApplication.class,applicationId );
+        List<WdbRelease> rels=HContext.Current().getSessionFactory()
+                .openSession()
+                .createCriteria(WdbRelease.class)
+                .add(Restrictions
+                .eq("wdbApplication.applicationId",applicationId))
+                .addOrder(Order.desc("wdbReleaseId")).list();
+        
+        r.Model = new ModelBase();
+        r.Model.Properties.put("application", app);
+         r.Model.Properties.put("releases", rels);
+        
+        return r;
+    }
+    
+    
 }

@@ -556,18 +556,26 @@ public class CrudTableBuilder {
             
        //Add a second column of type Lookup,that point to the fk column on base view table (VISIBLE)
        ctc= new CrudTableColumn();
-       ctc.ColumnName="lt_"+ColumnName+"."+LookupDesc + " AS lt_"+ColumnName+"_"+LookupDesc;
+       ctc.ColumnName="lt_"+ColumnName+"_"+LookupDesc;
        ctc.Name="lt_"+ColumnName+"_"+LookupDesc;
        ctc.Header=Header;
        ctc.Hidden=false;
        ctc.DbType=sqlDataTypes.Text;
        ctc.FieldType= JqGridFieldType.Expression;
+       ctc.Expression="lt_"+ColumnName+"."+LookupDesc ;
        
        this.AddColumn(ctc); 
           
           
             
        return EditAsLookup(ColumnName, Header, required);
+    }
+
+    public CrudTableBuilder Expression(String columnName, String expr) {
+        CrudTableColumn ctc= this.ct.Columns.getByName(columnName);
+        ctc.Expression=expr;
+        //TODO: Search type none
+        return this;
     }
 }
 
