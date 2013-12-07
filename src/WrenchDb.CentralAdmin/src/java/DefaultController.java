@@ -102,6 +102,18 @@ public class DefaultController extends ControllerBase {
     }
 
     @Action
+    public ActionResult SimpleView(ModelBase model) {
+        ActionResult r = new ActionResult(
+                model.get("viewname"),
+                "OneColumn", 
+                new ModelBase());
+
+
+        return r;
+    }
+    
+    
+     @Action
     public ActionResult Prova(ModelBase model) {
         ActionResult r = new ActionResult("ok", "OneColumn", new ModelBase());
 
@@ -109,6 +121,7 @@ public class DefaultController extends ControllerBase {
         r.Model.Properties.put("id", "MODIFICATO");
         return r;
     }
+     
     
       @Action
     public ActionResult ViewActionDetails(ModelBase model) {

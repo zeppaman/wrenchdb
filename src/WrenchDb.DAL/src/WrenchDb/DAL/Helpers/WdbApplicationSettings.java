@@ -32,7 +32,7 @@ public class WdbApplicationSettings extends Properties {
     private static  WdbApplicationSettings _current=null;
   
     
-    public static WdbApplicationSettings Init(Properties props)
+    public static void Init(Properties props)
     {
             WdbApplicationSettings settings= new WdbApplicationSettings();
            PropertiesHelper.MergeProperties(settings, props);
@@ -59,7 +59,7 @@ public class WdbApplicationSettings extends Properties {
             
             Ensurekeys(settings);
             
-            return settings;
+            _current= settings;
     }
     
     /**

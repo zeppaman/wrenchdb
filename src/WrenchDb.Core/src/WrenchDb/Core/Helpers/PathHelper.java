@@ -39,11 +39,23 @@ public class PathHelper {
         }}
         return path.replace("/",File.separator).replace("\\",File.separator).replace(File.separator+File.separator, File.separator);
     }
-
+   /**
+    * 
+    * @param path
+    * @return 
+    */
       public static String getDirectoryName(String path) {
             File f= new File(path);
-            if(f.isDirectory()) return path;
-            return f.getParentFile().getAbsolutePath();
+            if(f.exists() && f.isDirectory() ) return path;            
+            if(f.exists() && f.isFile()) return f.getParent();
+            // not existing file or directory
+            // no way do know if it si a no extension file or folder
+            // by default return path
+            if(path.contains("."))
+            {
+                return f.getParent();
+            }
+            return path;
       }
       
       public static String getParentDirectoryName(String path) {
@@ -51,7 +63,7 @@ public class PathHelper {
             return f.getParentFile().getAbsolutePath();
       }
     public static void createFolderIfNotExists(String path) {
-        String parentDirOrItself=getDirectoryName(path);
+      String parentDirOrItself=getDirectoryName(path);
       if(!PathHelper.exists(parentDirOrItself))
       {
           PathHelper.createDirectory(parentDirOrItself);

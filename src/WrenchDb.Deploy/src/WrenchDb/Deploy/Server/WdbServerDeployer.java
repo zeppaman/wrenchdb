@@ -7,10 +7,13 @@ package WrenchDb.Deploy.Server;
 import WrenchDb.Core.Helpers.ReflectionHelper;
 import WrenchDb.DAL.Entities.WdbApplication;
 import WrenchDb.DAL.Entities.WdbRelease;
+import WrenchDb.DAL.Entities.WdbServertype;
 import WrenchDb.DAL.Helpers.HContext;
 import WrenchDb.DAL.Helpers.WdbApplicationSettings;
+import WrenchDb.Deploy.Model.IFileDeployItem;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.hibernate.Session;
 
 /**
  *
@@ -20,17 +23,22 @@ public abstract class WdbServerDeployer {
     
     private WdbApplication application =null;
     
+    
     public  WdbServerDeployer()
     {
     }
     
     public static WdbServerDeployer  getWebServerDeployer(long applicationId) 
     {
+        Session s=null;
         try
         {
-            WdbApplication application = HContext.Current().Get(WdbApplication.class, applicationId);
-            WdbServerDeployer app= ReflectionHelper.getNewInstance(application.getWdbServertype().getServertypeName());
-            app.application=application;
+             s=HContext.Current().getSessionFactory().openSession();
+            WdbApplication application =(WdbApplication)s.get(WdbApplication.class, applicationId);
+            WdbServertype type=application.getWdbServertype();
+            String classname=type.getServertypeDeployername();
+            WdbServerDeployer app= ReflectionHelper.getNewInstance(classname);
+            app.application=application;         
             return app;
             
         }
@@ -38,6 +46,11 @@ public abstract class WdbServerDeployer {
         {
             Logger.getLogger(WdbServerDeployer.class.getName())
                       .log(Level.SEVERE, "",err);
+        }
+        finally
+        {
+            if(s!=null && s.isOpen())
+                s.close();
         }
         return null;
 
@@ -56,16 +69,15 @@ public abstract class WdbServerDeployer {
     
     public boolean Install() throws Exception
     {
-        //WdbRelease rel=HContext.Current().
-      return   Deploy();
+          throw new Exception(this.getClass().getName()+" Install not implemented");
     }
     
-    public boolean Deploy() throws Exception
+    public boolean Deploy(IFileDeployItem deployItem) throws Exception
     {
         throw new Exception(this.getClass().getName()+" Deploy not implemented");
     }
 
-    public boolean UnDeploy() throws Exception
+    public boolean UnDeploy(IFileDeployItem deployItem) throws Exception
     {
         throw new Exception(this.getClass().getName()+" Deploy not implemented");
     }
@@ -73,5 +85,12 @@ public abstract class WdbServerDeployer {
     public boolean Uninstall() throws Exception
     {
         throw new Exception(this.getClass().getName()+" Uninstall not implemented");
+    }
+
+    /**
+     * @return the application
+     */
+    public WdbApplication getApplication() {
+        return application;
     }
 }

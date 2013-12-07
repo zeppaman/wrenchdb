@@ -23,7 +23,7 @@ public class JSONHelper {
        // System.err.println("sdsd"+cname+" "+Value.toString());
        switch(cname)
        {
-            case "java.lang.String": literalValue="\""+Value.toString().replace("\"", "\\\"") +"\""; 
+            case "java.lang.String": literalValue="\""+Value.toString().replace("\"", "\\\"").replace("\\", "\\\\") +"\""; 
             break;
             case "java.lang.Double": literalValue=Value.toString() ;
             break;

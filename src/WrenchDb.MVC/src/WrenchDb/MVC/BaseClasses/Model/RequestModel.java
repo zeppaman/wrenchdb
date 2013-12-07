@@ -17,9 +17,12 @@
 package WrenchDb.MVC.BaseClasses.Model;
 
 import WrenchDb.MVC.Annotations.*;
+import WrenchDb.MVC.Enums.RequestMethod;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
 
 /**
  *
@@ -29,10 +32,16 @@ import javax.servlet.http.HttpServletRequest;
 @Model(ModelName = "Request Model")
 public class RequestModel extends ModelBase
 {
+    
+    public RequestMethod Method= RequestMethod.GET;
+    public Collection<Part> Parts=null;
+    public HttpServletRequest OriginalRequest;
     public static RequestModel CreateRequestModel(HashMap map,HttpServletRequest context )
     {
         RequestModel rm= new RequestModel();
         rm.Properties=map;
+        rm.OriginalRequest=context;
+        
         Enumeration<String> enu= context.getParameterNames();
         String key="";
         while(enu.hasMoreElements())
@@ -40,6 +49,17 @@ public class RequestModel extends ModelBase
             key=enu.nextElement();
             rm.Properties.put(key,context.getParameter(key));
         }
+        try
+        {
+                rm.Parts=context.getParts();
+        }
+        catch(Exception er)
+        {
+            //TODO: LOG Here
+            //TODO Add Error processing system 
+        }
+        if("post".equals(context.getMethod().toLowerCase()))
+            rm.Method= RequestMethod.POST;
         return rm;
         
     }

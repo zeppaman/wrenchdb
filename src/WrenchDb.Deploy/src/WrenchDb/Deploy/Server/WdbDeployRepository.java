@@ -15,6 +15,7 @@ import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.UUID;
 
 /**
  *
@@ -24,6 +25,11 @@ public class WdbDeployRepository
 {
     private HashMap releasecache= new HashMap();
     private String rootPath="";
+    
+    public void setReleaseCacheItem( WdbRelease release)
+    {
+          releasecache.put(release.getWdbReleaseId(), release);
+     }
     public String getEmptyWarTemplate()
     {
         // /wdb_version/templates/empty.war
@@ -42,7 +48,7 @@ public class WdbDeployRepository
     
     public String getReleaseWarPath(long releaseId)
     {
-        WdbRelease release= HContext.Current().Get(WdbRelease.class, releaseId);
+        WdbRelease release= getCachedRelease(releaseId);
         // /wdb_version/templates/empty.war
         //TODO: do fallback from configuration to default;
         return  PathHelper.combine(rootPath,"/1.0/releases/"+release.getWdbApplication().getApplicationId()+"/"+release.getWdbReleaseId()
@@ -62,9 +68,13 @@ public class WdbDeployRepository
     }
     public WdbDeployRepository(String rootPath)
     {
-        this.rootPath=rootPath;        
+        this.rootPath=rootPath;   
+        String tmpDir=getUploadTempDir();
+        PathHelper.createFolderIfNotExists(this.rootPath);
+        PathHelper.createFolderIfNotExists(  tmpDir  );
     }
     
+   
     public void storeJarCustomization(long releaseId, JarPackage jar)
     {
        String destUri= getReleaseJarPath(releaseId);
@@ -79,6 +89,7 @@ public class WdbDeployRepository
         PathHelper.createFolderIfNotExists(getReleaseJarPath(releaseId));
         PathHelper.createFolderIfNotExists(getReleaseWarPath(releaseId));
         PathHelper.createFolderIfNotExists(getReleaseTempPath(releaseId));
+        
         
     }
     public void createReleaseWar(long releaseId) throws Exception
@@ -119,5 +130,18 @@ public class WdbDeployRepository
           releasecache.put(releaseId, HContext.Current().Get(WdbRelease.class, releaseId));
        }
        return (WdbRelease)releasecache.get(releaseId);
+    }
+
+    public String getUploadTempDir() {
+        return PathHelper.combine(rootPath,"temp");
+    }
+
+    public String getTempFileaname() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public String getTempRandomFilePath() {
+        
+       return PathHelper.combine( getUploadTempDir(), UUID.randomUUID().toString()+".jar");
     }
 }

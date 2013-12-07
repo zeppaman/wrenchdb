@@ -55,6 +55,10 @@ public class CrudTableConfiguration
                .EditColumn("application_name",true,true)
                         .AddColumn("Server Username","server_user", SqlDataTypes.Text,JqGridFieldType.SingleLineText)
                .EditColumn("server_user",true,true)
+                        
+               .AddColumn("Sever application_server_uri","application_server_uri", SqlDataTypes.Text,JqGridFieldType.SingleLineText)
+               .EditColumn("application_server_uri",true,true)
+                        
                         .AddColumn("Sever Password","server_password", SqlDataTypes.Text,JqGridFieldType.Password)
                .EditColumn("server_password",true,true)
                .EditAsUrl("application_hostname","Host Name",true)
@@ -71,7 +75,7 @@ public class CrudTableConfiguration
                 .AddColumn("Db Password","database_password", SqlDataTypes.Text,JqGridFieldType.Password)
                .EditColumn("database_password",true,true)
                 .AddColumn("Details","link", SqlDataTypes.Text,JqGridFieldType.Expression)
-                .Expression("link","'<a href=''/WrenchDb.CentralAdmin/DefaultController/ViewActionDetails/'||application_id||''' >details</a>'");
+                .Expression("link","'<a class=''btn btn-info'' href=''/WrenchDb.CentralAdmin/DefaultController/ViewActionDetails/'||application_id||''' >details</a>'");
               
                 configuration.add(ctb.getCrudTable());
                 

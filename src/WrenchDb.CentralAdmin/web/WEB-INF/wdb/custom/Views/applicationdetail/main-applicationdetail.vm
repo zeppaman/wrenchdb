@@ -1,8 +1,32 @@
 <h1>Application Detail</h1> 
 #set ($app=$Model.getProperties().get("application"))
 #set ($rels=$Model.getProperties().get("releases"))
-Nome:$app.getApplicationName()<br/>
-HostName:$app.getApplicationHostname()<br/>
+
+
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">Panel heading</div>
+
+  <!-- Table -->
+  <table class="table">
+    <tr>
+        <td>Nome</td>
+        <td>$app.getApplicationName()</td>
+    </tr>
+
+    <tr>
+        <td>HostName</td>
+        <td>$app.getApplicationHostname()</td>
+    </tr>
+     <tr>
+        <td colspan="2">
+       
+        <a href="/WrenchDb.CentralAdmin/ReleaseController/addRelease/$app.getApplicationId()" class="btn btn-info"  >Add Release</a>
+     </td>
+    </tr>
+  </table>
+</div>
+
 
 <ul class="nav nav-tabs">
   <li><a href="#releases" data-toggle="tab">Releases</a></li>
@@ -50,7 +74,8 @@ HostName:$app.getApplicationHostname()<br/>
                      $rel.getReleasedOn()
             </td>
             <td>
-                     <a href="#" class="btn btn-warning" >Deploy</a>
+                    <a href="/WrenchDb.CentralAdmin/ReleaseController/Release/$rel.getWdbReleaseId()" class="btn btn-success"  >Info</a>
+                    <a href="/WrenchDb.CentralAdmin/ReleaseController/Deploy/$rel.getWdbReleaseId()" class="btn btn-warning" >Deploy</a>
             </td>
              </tr>
             #end
