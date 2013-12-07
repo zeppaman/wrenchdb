@@ -1,6 +1,7 @@
 <h1>Application Detail</h1> 
 #set ($app=$Model.getProperties().get("application"))
 #set ($rels=$Model.getProperties().get("releases"))
+#set ($dbchanges=$Model.getProperties().get("dbchanges"))
 
 
 <div class="panel panel-default">
@@ -82,6 +83,40 @@
             </table>
     </div>
     <div class="tab-pane" id="changes">
+
+
+            <h3>Db Changes</h3>
+
+
+            <table class="table table-bordered">
+            <tr>
+            <td>#</td>
+            <td>Version</td>
+            <td>Description</td>
+            <td>Deployed</td>
+            <td>Actions</td>
+            </tr>
+            #foreach( $dbchange in $dbchanges )
+               <tr>
+            <td>
+                     $dbchange.getChangescriptId()
+              </td>
+                <td>
+                     $dbchange.getScriptSource()
+              </td>
+             <td>
+                     $dbchange.getChangescriptDesc()
+              </td>
+            <td>
+                     $dbchange.getisIsDeployed()
+            </td>
+            <td>
+                    <a href="/WrenchDb.CentralAdmin/ReleaseController/???/$dbchange.getWdbChangeScriptId()" class="btn btn-success"  >Info</a>
+            </td>
+             </tr>
+            #end
+            </table>
+
     </div>
     <div class="tab-pane" id="messages">
     </div>

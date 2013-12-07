@@ -16,6 +16,7 @@
  */
 
 import WrenchDb.DAL.Entities.WdbApplication;
+import WrenchDb.DAL.Entities.WdbChangescript;
 import WrenchDb.DAL.Entities.WdbRelease;
 import WrenchDb.DAL.Helpers.HContext;
 import WrenchDb.Data.Configuration.CrudTableSet;
@@ -44,6 +45,7 @@ import org.codehaus.cargo.generic.configuration.ConfigurationFactory;
 import org.codehaus.cargo.generic.configuration.DefaultConfigurationFactory;
 import org.codehaus.cargo.generic.deployable.DefaultDeployableFactory;
 import org.codehaus.cargo.generic.deployable.DeployableFactory;
+import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
@@ -127,7 +129,11 @@ public class DefaultController extends ControllerBase {
     public ActionResult ViewActionDetails(ModelBase model) {
         ActionResult r = new ActionResult("applicationdetail", "OneColumn", new ModelBase());
       long applicationId=Long.parseLong(model.Properties.get("id").toString());
-        WdbApplication app= HContext.Current().Get(WdbApplication.class,applicationId );
+      
+      Session s=HContext.Current().getSessionFactory()
+                .openSession();
+      
+        WdbApplication app=(WdbApplication)s.get(WdbApplication.class,applicationId );
         List<WdbRelease> rels=HContext.Current().getSessionFactory()
                 .openSession()
                 .createCriteria(WdbRelease.class)
@@ -135,9 +141,18 @@ public class DefaultController extends ControllerBase {
                 .eq("wdbApplication.applicationId",applicationId))
                 .addOrder(Order.desc("wdbReleaseId")).list();
         
-        r.Model = new ModelBase();
-        r.Model.Properties.put("application", app);
+        
+      
+        List<WdbChangescript> dbchanges=s
+                .createCriteria(WdbChangescript.class)
+                .add(Restrictions
+                .eq("wdbApplication.applicationId",applicationId))
+                .addOrder(Order.desc("scriptSource")).list();
+        
+         r.Model = new ModelBase();
+         r.Model.Properties.put("application", app);
          r.Model.Properties.put("releases", rels);
+         r.Model.Properties.put("dbchanges", dbchanges);
         
         return r;
     }
