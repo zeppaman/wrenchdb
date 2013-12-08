@@ -1,5 +1,5 @@
 package WrenchDb.DAL.Entities;
-// Generated 5-dic-2013 18.23.45 by Hibernate Tools 3.2.1.GA
+// Generated 8-dic-2013 14.59.34 by Hibernate Tools 3.2.1.GA
 
 
 import java.util.HashSet;
@@ -56,7 +56,7 @@ public class WdbEntity  implements java.io.Serializable {
     }
    
      @Id 
-      @Generated(GenerationTime.INSERT)
+          @Generated(GenerationTime.INSERT)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="entity_id", unique=true, nullable=false)
     public long getEntityId() {

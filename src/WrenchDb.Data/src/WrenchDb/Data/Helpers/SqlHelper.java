@@ -16,6 +16,7 @@
  */
 package WrenchDb.Data.Helpers;
 
+import WrenchDb.Data.Enums.JqGridFieldType;
 import WrenchDb.Data.Enums.SqlComparators;
 import static WrenchDb.Data.Enums.SqlComparators.BETWEEN;
 import static WrenchDb.Data.Enums.SqlComparators.CONTAINS;
@@ -111,6 +112,8 @@ public static String GetWhereSql(String FieldName, SqlComparators comp, Object V
         }
         return literalValue;
     }
+    
+    
 
     public static SqlDataTypes GetSqlDataTypeByValue(Object Value) {
 

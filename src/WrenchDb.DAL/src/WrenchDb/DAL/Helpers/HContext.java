@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 import javax.persistence.Entity;
 import org.hibernate.*;
 import org.hibernate.cfg.*;
+import org.hibernate.dialect.Dialect;
 import org.reflections.Reflections;
 
 /**
@@ -27,44 +28,44 @@ import org.reflections.Reflections;
 public class HContext {
     
     private static HContext _hContext=null;
-    
-    private   SessionFactory _sessionFactory;
 
-    private   Configuration _configuration;
     
-     public static void Init(String path) throws IOException  {
-
-            Properties props= new Properties();
-            props.load(new FileInputStream(path));
-            Init(props);
-        }
-     
-    public static void Init(Properties  props)  {
+    public static HContext createContext(String dialect,String DriverClass,String connectionUrl,String username,String password)
+    {
+        Properties p= new Properties();
+        p.put("hibernate.dialect",dialect.toString());
+        p.put("hibernate.connection.driver_class",DriverClass);
+        p.put("hibernate.connection.url",connectionUrl);
+        p.put("hibernate.connection.username",username);
+        p.put("hibernate.connection.password",password);
+        return createContext(p);
+    }
+    public static HContext createContext(Properties props) {
         try
         {
-            _hContext = new HContext();                
-           PropertiesHelper.MergeProperties( _hContext.getProperties(),props);
+          HContext   newcontext = new HContext();                
+           PropertiesHelper.MergeProperties( newcontext.getProperties(),props);
             
             //init Hibernate using properties entry;
             
             //set properties
           AnnotationConfiguration cfg=  new AnnotationConfiguration();
           String key="";
-          Enumeration<Object> propsKeys=_hContext.getProperties().keys();
+          Enumeration<Object> propsKeys=newcontext.getProperties().keys();
            while(propsKeys.hasMoreElements())
            {
                key=(String)propsKeys.nextElement();
                if(key.startsWith("hibernate."))
                {
-                   cfg.setProperty(key, _hContext.getProperties().getProperty(key));
+                   cfg.setProperty(key, newcontext.getProperties().getProperty(key));
                }
            }
            
            
       
-           if(_hContext.getProperties().containsKey("wdb.entitypackages"))               
+           if(newcontext.getProperties().containsKey("wdb.entitypackages"))               
            {
-            String[] packages= _hContext.getProperties().getProperty("wdb.entitypackages").split(",");
+            String[] packages= newcontext.getProperties().getProperty("wdb.entitypackages").split(",");
             Reflections reflections;
             for(String pk : packages)
             {
@@ -82,7 +83,7 @@ public class HContext {
             }
             //
            }
-          _hContext._configuration=cfg;
+          newcontext._configuration=cfg;
         
           
      
@@ -96,12 +97,33 @@ public class HContext {
             
             cfg.setListener("save-update",  new HListenerHandler());
             
-          _hContext.setSessionFactory( cfg.buildSessionFactory());
+          newcontext.setSessionFactory( cfg.buildSessionFactory());
+          
+          return newcontext;
         
          } catch (Exception ex) 
          {
                 Logger.getLogger(HContext.class.getName()).log(Level.SEVERE, null, ex);
          }
+        return null;
+    }
+    
+    private   SessionFactory _sessionFactory;
+
+    private   Configuration _configuration;
+    
+     public static void Init(String path) throws IOException  {
+
+            Properties props= new Properties();
+            props.load(new FileInputStream(path));
+            Init(props);
+        }
+     
+    public static void Init(Properties  props)  {
+        HContext   newcontext =null;
+       _hContext= createContext(props); 
+        
+        
     }
       
     
@@ -119,7 +141,7 @@ public class HContext {
         }
         return _hContext;
     }
-      
+     
       
     private HContext()
     {}
@@ -127,11 +149,22 @@ public class HContext {
     public <T> T  Get(Class c,long entityId)   
     {        
        Session s=this._sessionFactory.openSession();
-       T result= (T)s.get(c, (Serializable)entityId);
+       T result=(T)Get(s,c,entityId);
        s.close();
        return result;
       
     }
+    
+    public <T> T  Get(Session s,Class c,long entityId)   
+    {        
+       
+       T result= (T)s.get(c, (Serializable)entityId);
+   
+       return result;
+      
+    }
+    
+    
     public Boolean SaveOrUpdate(Object entity)
     {
        Session s= this._sessionFactory.openSession();

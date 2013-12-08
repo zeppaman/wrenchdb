@@ -1,5 +1,5 @@
 package WrenchDb.DAL.Entities;
-// Generated 5-dic-2013 18.23.45 by Hibernate Tools 3.2.1.GA
+// Generated 8-dic-2013 14.59.34 by Hibernate Tools 3.2.1.GA
 
 
 import java.util.HashSet;
@@ -26,7 +26,7 @@ import org.hibernate.annotations.GenerationTime;
 public class WdbDatabasetype  implements java.io.Serializable {
 
 
-     private int databasetypeId;
+     private long databasetypeId;
      private String databasetypeName;
      private String databasetypeDeployer;
      private Set<WdbApplication> wdbApplications = new HashSet<WdbApplication>(0);
@@ -35,10 +35,10 @@ public class WdbDatabasetype  implements java.io.Serializable {
     }
 
 	
-    public WdbDatabasetype(int databasetypeId) {
+    public WdbDatabasetype(long databasetypeId) {
         this.databasetypeId = databasetypeId;
     }
-    public WdbDatabasetype(int databasetypeId, String databasetypeName, String databasetypeDeployer, Set<WdbApplication> wdbApplications) {
+    public WdbDatabasetype(long databasetypeId, String databasetypeName, String databasetypeDeployer, Set<WdbApplication> wdbApplications) {
        this.databasetypeId = databasetypeId;
        this.databasetypeName = databasetypeName;
        this.databasetypeDeployer = databasetypeDeployer;
@@ -46,14 +46,14 @@ public class WdbDatabasetype  implements java.io.Serializable {
     }
    
      @Id 
-      @Generated(GenerationTime.INSERT)
+          @Generated(GenerationTime.INSERT)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="databasetype_id", unique=true, nullable=false)
-    public int getDatabasetypeId() {
+    public long getDatabasetypeId() {
         return this.databasetypeId;
     }
     
-    public void setDatabasetypeId(int databasetypeId) {
+    public void setDatabasetypeId(long databasetypeId) {
         this.databasetypeId = databasetypeId;
     }
     

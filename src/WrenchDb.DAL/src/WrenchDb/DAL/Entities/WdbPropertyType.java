@@ -1,5 +1,5 @@
 package WrenchDb.DAL.Entities;
-// Generated 5-dic-2013 18.23.45 by Hibernate Tools 3.2.1.GA
+// Generated 8-dic-2013 14.59.34 by Hibernate Tools 3.2.1.GA
 
 
 import java.util.HashSet;
@@ -29,6 +29,7 @@ public class WdbPropertyType  implements java.io.Serializable {
      private long propertyType;
      private String propertyTypeName;
      private String propertyTypeDesc;
+     private String propertyTypeSql;
      private Set<WdbProperty> wdbProperties = new HashSet<WdbProperty>(0);
 
     public WdbPropertyType() {
@@ -38,15 +39,16 @@ public class WdbPropertyType  implements java.io.Serializable {
     public WdbPropertyType(long propertyType) {
         this.propertyType = propertyType;
     }
-    public WdbPropertyType(long propertyType, String propertyTypeName, String propertyTypeDesc, Set<WdbProperty> wdbProperties) {
+    public WdbPropertyType(long propertyType, String propertyTypeName, String propertyTypeDesc, String propertyTypeSql, Set<WdbProperty> wdbProperties) {
        this.propertyType = propertyType;
        this.propertyTypeName = propertyTypeName;
        this.propertyTypeDesc = propertyTypeDesc;
+       this.propertyTypeSql = propertyTypeSql;
        this.wdbProperties = wdbProperties;
     }
    
      @Id 
-      @Generated(GenerationTime.INSERT)
+          @Generated(GenerationTime.INSERT)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="property_type", unique=true, nullable=false)
     public long getPropertyType() {
@@ -73,6 +75,15 @@ public class WdbPropertyType  implements java.io.Serializable {
     
     public void setPropertyTypeDesc(String propertyTypeDesc) {
         this.propertyTypeDesc = propertyTypeDesc;
+    }
+    
+    @Column(name="property_type_sql", length=300)
+    public String getPropertyTypeSql() {
+        return this.propertyTypeSql;
+    }
+    
+    public void setPropertyTypeSql(String propertyTypeSql) {
+        this.propertyTypeSql = propertyTypeSql;
     }
 @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="wdbPropertyType")
     public Set<WdbProperty> getWdbProperties() {

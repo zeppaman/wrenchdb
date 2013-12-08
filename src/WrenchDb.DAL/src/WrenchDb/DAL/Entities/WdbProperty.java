@@ -1,5 +1,5 @@
 package WrenchDb.DAL.Entities;
-// Generated 5-dic-2013 18.23.45 by Hibernate Tools 3.2.1.GA
+// Generated 8-dic-2013 14.59.34 by Hibernate Tools 3.2.1.GA
 
 
 import javax.persistence.Column;
@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 
@@ -21,7 +20,6 @@ import org.hibernate.annotations.GenerationTime;
 @Entity
 @Table(name="wdb_property"
     ,schema="public"
-    , uniqueConstraints = @UniqueConstraint(columnNames={"property_name", "entity_id"}) 
 )
 public class WdbProperty  implements java.io.Serializable {
 
@@ -29,7 +27,6 @@ public class WdbProperty  implements java.io.Serializable {
      private long propertyId;
      private WdbEntity wdbEntity;
      private WdbPropertyType wdbPropertyType;
-     private long propertyName;
      private String propertyLabel;
      private String configData;
      private Integer width;
@@ -37,21 +34,21 @@ public class WdbProperty  implements java.io.Serializable {
      private Boolean isInedit;
      private Boolean isInview;
      private Boolean isInlist;
+     private String propertyName;
 
     public WdbProperty() {
     }
 
 	
-    public WdbProperty(long propertyId, WdbEntity wdbEntity, long propertyName) {
+    public WdbProperty(long propertyId, WdbEntity wdbEntity, String propertyName) {
         this.propertyId = propertyId;
         this.wdbEntity = wdbEntity;
         this.propertyName = propertyName;
     }
-    public WdbProperty(long propertyId, WdbEntity wdbEntity, WdbPropertyType wdbPropertyType, long propertyName, String propertyLabel, String configData, Integer width, Boolean isInnew, Boolean isInedit, Boolean isInview, Boolean isInlist) {
+    public WdbProperty(long propertyId, WdbEntity wdbEntity, WdbPropertyType wdbPropertyType, String propertyLabel, String configData, Integer width, Boolean isInnew, Boolean isInedit, Boolean isInview, Boolean isInlist, String propertyName) {
        this.propertyId = propertyId;
        this.wdbEntity = wdbEntity;
        this.wdbPropertyType = wdbPropertyType;
-       this.propertyName = propertyName;
        this.propertyLabel = propertyLabel;
        this.configData = configData;
        this.width = width;
@@ -59,10 +56,11 @@ public class WdbProperty  implements java.io.Serializable {
        this.isInedit = isInedit;
        this.isInview = isInview;
        this.isInlist = isInlist;
+       this.propertyName = propertyName;
     }
    
      @Id 
-      @Generated(GenerationTime.INSERT)
+          @Generated(GenerationTime.INSERT)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="property_id", unique=true, nullable=false)
     public long getPropertyId() {
@@ -89,15 +87,6 @@ public class WdbProperty  implements java.io.Serializable {
     
     public void setWdbPropertyType(WdbPropertyType wdbPropertyType) {
         this.wdbPropertyType = wdbPropertyType;
-    }
-    
-    @Column(name="property_name", nullable=false)
-    public long getPropertyName() {
-        return this.propertyName;
-    }
-    
-    public void setPropertyName(long propertyName) {
-        this.propertyName = propertyName;
     }
     
     @Column(name="property_label", length=200)
@@ -161,6 +150,15 @@ public class WdbProperty  implements java.io.Serializable {
     
     public void setIsInlist(Boolean isInlist) {
         this.isInlist = isInlist;
+    }
+    
+    @Column(name="property_name", nullable=false, length=300)
+    public String getPropertyName() {
+        return this.propertyName;
+    }
+    
+    public void setPropertyName(String propertyName) {
+        this.propertyName = propertyName;
     }
 
 

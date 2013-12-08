@@ -20,6 +20,7 @@ import WrenchDb.DAL.Entities.WdbApplication;
 import WrenchDb.DAL.Entities.WdbRelease;
 import WrenchDb.DAL.Helpers.HContext;
 import WrenchDb.DAL.Helpers.WdbApplicationSettings;
+import WrenchDb.Deploy.Database.WdbDatabaseDeployer;
 import WrenchDb.Deploy.Model.IFileDeployItem;
 import WrenchDb.Deploy.Model.JarPackage;
 import WrenchDb.Deploy.Model.WarPackage;
@@ -33,9 +34,9 @@ import WrenchDb.MVC.BaseClasses.Model.ModelBase;
 import WrenchDb.MVC.BaseClasses.Model.RequestModel;
 import WrenchDb.MVC.Enums.RequestMethod;
 import WrenchDb.MVC.Helpers.FileUploaderHelper;
-import com.sun.istack.internal.logging.Logger;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
@@ -110,13 +111,18 @@ public class ReleaseController extends ControllerBase {
        //Load JAR File
        JarPackage jp= new JarPackage();
        jp.LoadFromFile((tempFileName));
+      long application_id=Long.parseLong(rm.get("id"));
+       WdbDatabaseDeployer db= WdbDatabaseDeployer.getDatabaseDeployer(application_id);
+       db.DeployPendingChanges();
        // Save release and jar
        Session s= HContext.Current().getSessionFactory().openSession();
        Transaction t=null;
        try
        {
        t=s.beginTransaction();
-       long application_id=Long.parseLong(rm.get("id"));
+      
+       
+       
        
        WdbApplication parentApp=(WdbApplication)s.get(WdbApplication.class,application_id);
        
@@ -155,8 +161,8 @@ public class ReleaseController extends ControllerBase {
        }
        catch(Exception err)
        {
-           Logger.getLogger(ReleaseController.class).log(Level.SEVERE,"SaveNewRelease",err);
-          t.rollback();
+           Logger.getLogger(ReleaseController.class.getName()).log(Level.SEVERE,"SaveNewRelease",err);
+           t.rollback();
           throw  err;
        }
        finally

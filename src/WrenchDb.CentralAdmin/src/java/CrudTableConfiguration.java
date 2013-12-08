@@ -122,7 +122,7 @@ public class CrudTableConfiguration
                 .AddColumn("Label","property_label", SqlDataTypes.Text,JqGridFieldType.SingleLineText)
                         .EditColumn("property_label",true,true)
                 .AddColumn("Width","width", SqlDataTypes.Integer,JqGridFieldType.Integer)
-                        .EditColumn("width",false,false)
+                        .EditAsNumber("width","Col Width",0,1000)
                 .AddColumn("Show in New","is_innew", SqlDataTypes.Boolean,JqGridFieldType.CheckBox)
                          .EditAsCheckBox("is_innew","Show in New From",true)
                 .AddColumn("Show in Edit","is_inedit", SqlDataTypes.Boolean,JqGridFieldType.CheckBox)

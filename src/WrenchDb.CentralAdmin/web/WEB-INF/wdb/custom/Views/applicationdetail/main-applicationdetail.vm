@@ -108,10 +108,10 @@
                      $dbchange.getChangescriptDesc()
               </td>
             <td>
-                     $dbchange.getisIsDeployed()
+                     $dbchange.isIsDeployed()
             </td>
             <td>
-                    <a href="/WrenchDb.CentralAdmin/ReleaseController/???/$dbchange.getWdbChangeScriptId()" class="btn btn-success"  >Info</a>
+                    <a href="/WrenchDb.CentralAdmin/ReleaseController/???/$dbchange.getChangescriptId()" class="btn btn-success"  >Info</a>
             </td>
              </tr>
             #end
