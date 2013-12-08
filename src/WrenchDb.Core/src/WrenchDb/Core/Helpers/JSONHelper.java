@@ -14,6 +14,17 @@ import java.util.Date;
  */
 public class JSONHelper {
     
+    
+    public static String encodeString(String s)
+    {
+        
+       return s.replace("\"", "\\\"")
+         .replace("\n", "\\n")
+          .replace("\r", "\\r")
+          .replace("\t", "\\t")
+                .replace("'", "\\'")
+                .replace("\b", "\\b");
+    }
     public static String ConvertBaseType(Object Value)
     {
         if(Value==null) return "null";
@@ -23,7 +34,7 @@ public class JSONHelper {
        // System.err.println("sdsd"+cname+" "+Value.toString());
        switch(cname)
        {
-            case "java.lang.String": literalValue="\""+Value.toString().replace("\"", "\\\"").replace("\\", "\\\\") +"\""; 
+            case "java.lang.String": literalValue="\""+encodeString(Value.toString()) +"\""; 
             break;
             case "java.lang.Double": literalValue=Value.toString() ;
             break;
@@ -42,7 +53,7 @@ public class JSONHelper {
                 break;
             
            default:
-               literalValue="\""+Value.toString()+"\"";
+               literalValue="\""+encodeString(Value.toString())+"\"";
        }
        return literalValue;
     }
