@@ -5,6 +5,7 @@
 package WrenchDb.DAL.Helpers;
 
 import WrenchDb.Core.Helpers.PropertiesHelper;
+import WrenchDb.DAL.Configuration.HListenerHandler;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
@@ -82,6 +83,19 @@ public class HContext {
             //
            }
           _hContext._configuration=cfg;
+        
+          
+     
+//            cfg.setListener("pre-insert", new HListenerHandler());
+//            cfg.setListener("pre-update",  new HListenerHandler());
+            cfg.setListener("pre-delete",  new HListenerHandler());
+            
+//            cfg.setListener("post-insert",  new HListenerHandler());
+//            cfg.setListener("post-update",  new HListenerHandler());
+            cfg.setListener("post-delete",  new HListenerHandler());
+            
+            cfg.setListener("save-update",  new HListenerHandler());
+            
           _hContext.setSessionFactory( cfg.buildSessionFactory());
         
          } catch (Exception ex) 
@@ -229,6 +243,51 @@ public class HContext {
         return -1;
     }
     
+    
+    
+    
+    public Object  ExecuteScalar(String sql) {
+       Session s= this._sessionFactory.openSession();
+        Boolean result=false;
+       try
+       {
+          
+           
+         return ExecuteScalar(s,sql);
+       }
+       catch(Exception ex)
+       {
+          
+           Logger.getLogger(HContext.class.getName()).log(Level.SEVERE, null, ex);
+       }
+       finally
+       {
+          s.close();
+       }
+       return -1;
+    }
+    public Object ExecuteScalar(Session s,String sql)
+    { 
+         Transaction t=null;
+        try
+        {
+            
+            SQLQuery q=  s.createSQLQuery(sql);
+            t=s.beginTransaction();
+            Object results= q.uniqueResult();
+              t.commit();
+            return results;
+            
+          
+       
+        }
+        catch(Exception ex)
+        {
+            if(t!=null) t.rollback();
+              Logger.getLogger(HContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
     
     public Boolean SaveOrUpdate(Session s,Object entity)
     {

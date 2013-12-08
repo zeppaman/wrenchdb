@@ -19,6 +19,8 @@ package WrenchDb.Data.Servlets;
 import WrenchDb.Core.Classes.HtmlRenderer;
 import WrenchDb.Core.Helpers.JSONHelper;
 import WrenchDb.Core.Helpers.WdbStringHelper;
+import WrenchDb.DAL.Configuration.EventListenerSet;
+import static WrenchDb.DAL.Configuration.HListenerHandler.EventProvider;
 import WrenchDb.DAL.Helpers.HContext;
 import WrenchDb.Data.Configuration.CrudTableSet;
 import WrenchDb.Data.Enums.DataSourceMode;
@@ -28,6 +30,7 @@ import WrenchDb.Data.Enums.SqlComparators;
 import WrenchDb.Data.Helpers.*;
 import WrenchDb.Data.Model.*;
 import java.io.IOException;
+import java.util.EventListener;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,7 +40,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import sun.swing.MenuItemLayoutHelper;
 
 /**
  *
@@ -253,7 +255,17 @@ extends HttpServlet {
               }
           }
           ub.AndWhere(pkColumn.Name,SqlComparators.EQUAL,req.getParameter("id"),pkColumn.DbType);
+         
+          
+          List<WrenchDb.DAL.Configuration.EventListener> list= EventListenerSet.Current().getListenersFromSource(ct.TableName);
+       
+       boolean cancel=performPreUpdateEvents(list,req,req.getParameter("id"));
+       if(! cancel)
+       {
           int rows=HContext.Current().ExecuteNoResult(ub.toString());
+          perfromPostUpdatetEvents(list,req,req.getParameter("id"));
+       
+       }
     }
 
     private void doDelete(CrudTable ct, HttpServletRequest req, HttpServletResponse resp) throws Exception {
@@ -267,14 +279,35 @@ extends HttpServlet {
         DeleteBuilder db= new DeleteBuilder();
         db.From(ct.TableName);
         db.AndWhere(pkColumn.Name,SqlComparators.EQUAL,req.getParameter("id"),pkColumn.DbType);
-         int rows=HContext.Current().ExecuteNoResult(db.toString());
-         if(rows<1)
+        
+        
+        List<WrenchDb.DAL.Configuration.EventListener> list= EventListenerSet.Current().getListenersFromSource(ct.TableName);
+       
+       boolean cancel=performPreDeleteEvents(list,req,req.getParameter("id"));
+       if(! cancel)
+       {
+          int rows=HContext.Current().ExecuteNoResult(db.toString());
+           if(rows<1)
          {
              throw new Exception("Unable to perform delete operation. see log for more information.");
          }
+          perfromPostDeleteEvents(list,req,req.getParameter("id"));
+       
+       }
+       
+       
+   
+        
     }
 
-    private void doAdd(CrudTable ct, HttpServletRequest req, HttpServletResponse resp) {
+    private void doAdd(CrudTable ct, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        
+         int pkIdx=ct.GetPkIdx();
+        if(pkIdx<0)
+        {
+           throw new Exception("Unable to edit row without pk definition on "+ct.getName());
+        }
+        CrudTableColumn pkColumn= ct.Columns.get(pkIdx);
         
         InsertBuilder ib= new InsertBuilder();
         ib.Into(ct.TableName);
@@ -286,8 +319,13 @@ extends HttpServlet {
             }
         }
      
-        int rows=HContext.Current().ExecuteNoResult(ib.toString());
-        
+       List<WrenchDb.DAL.Configuration.EventListener> list= EventListenerSet.Current().getListenersFromSource(ct.TableName);
+       boolean cancel=performPreInsertEvents(list,req);
+       if(! cancel)
+       {
+             Object newId=HContext.Current().ExecuteScalar(ib.toString()+"  RETURNING "+pkColumn.Name);
+             perfromPostInsertEvents(list, req, newId);
+       }
     }
 
     private void doLookup(CrudTable ct, HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -320,5 +358,52 @@ extends HttpServlet {
         resp.getWriter().append(r.GetHtml());
     }
 
+    private boolean performPreInsertEvents(List<WrenchDb.DAL.Configuration.EventListener> list, HttpServletRequest req) {
+         boolean cancel=false;
+        for(WrenchDb.DAL.Configuration.EventListener l :list)
+        {
+              cancel= cancel |  l.BeforeInsert(req.getParameterMap(),EventProvider);
+        }
+        return cancel;
+    }
+    
+    private boolean performPreUpdateEvents(List<WrenchDb.DAL.Configuration.EventListener> list, HttpServletRequest req,Object Id) {
+         boolean cancel=false;
+        for(WrenchDb.DAL.Configuration.EventListener l :list)
+        {
+              cancel= cancel |  l.BeforeUpdate(req.getParameterMap(),Id,EventProvider);
+        }
+        return cancel;
+    }
+    
+    private boolean performPreDeleteEvents(List<WrenchDb.DAL.Configuration.EventListener> list, HttpServletRequest req,Object Id) {
+         boolean cancel=false;
+        for(WrenchDb.DAL.Configuration.EventListener l :list)
+        {
+              cancel= cancel |  l.BeforeDelete(req.getParameterMap(),Id,EventProvider);
+        }
+        return cancel;
+    }
+
+    private void perfromPostInsertEvents(List<WrenchDb.DAL.Configuration.EventListener> list, HttpServletRequest req,Object Id) {
+        for(WrenchDb.DAL.Configuration.EventListener l :list)
+        {
+           l.AfterInsert(req.getParameterMap(),Id,EventProvider);
+        }
+    }
+    
+    private void perfromPostUpdatetEvents(List<WrenchDb.DAL.Configuration.EventListener> list, HttpServletRequest req,Object Id) {
+        for(WrenchDb.DAL.Configuration.EventListener l :list)
+        {
+           l.AfterUpdate(req.getParameterMap(),Id,EventProvider);
+        }
+    }
+    
+    private void perfromPostDeleteEvents(List<WrenchDb.DAL.Configuration.EventListener> list, HttpServletRequest req,Object Id) {
+        for(WrenchDb.DAL.Configuration.EventListener l :list)
+        {
+           l.AfterDelete(req.getParameterMap(),Id,EventProvider);
+        }
+    }
     
 }

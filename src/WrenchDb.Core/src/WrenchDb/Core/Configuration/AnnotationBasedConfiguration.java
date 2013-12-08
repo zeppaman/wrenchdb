@@ -61,6 +61,7 @@ public abstract class AnnotationBasedConfiguration<ObjectType>   {
                }
            
         }
+        _inited=true;
     }
 
     public ObjectType GetByName(String Name)
@@ -86,6 +87,7 @@ public abstract class AnnotationBasedConfiguration<ObjectType>   {
          if(!_inited)
         {
             LoadItems();
+            
         }
         return items;
     }
@@ -95,6 +97,7 @@ public abstract class AnnotationBasedConfiguration<ObjectType>   {
      */
     public void setItems(ArrayList<ObjectType> items) {
         this.items = items;
+        _inited=true;
     }
     
     

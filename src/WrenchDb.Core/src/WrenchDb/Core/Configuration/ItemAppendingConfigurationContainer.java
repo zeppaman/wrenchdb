@@ -34,7 +34,6 @@ public abstract class ItemAppendingConfigurationContainer<ObjectType> {
         if(!_inited)
         {
             LoadItems();
-            _inited=true;
         }
         return items;
     }
@@ -44,6 +43,7 @@ public abstract class ItemAppendingConfigurationContainer<ObjectType> {
      */
     public void setItems(ArrayList<ObjectType> items) {
         this.items = items;
+        _inited=true;
     }
     
     
@@ -111,6 +111,7 @@ public abstract class ItemAppendingConfigurationContainer<ObjectType> {
                
            
         }
+        _inited=true;
     }
     
 }
