@@ -1,3 +1,5 @@
+package WrenchDb.Web.Defaults.Routing;
+
 /* 
  * Copyright (C) 2013 Daniele Fontani
  *
@@ -37,13 +39,7 @@ public class DefaultRoutingConfiguration
                 
                 
                 
-                map=  new RouteMap();
-                map.setName("DefaultController");
-                map.setUrl("/");
-                map.setDefaultActionName("Index");
-                map.setDefaultControllerName("DefaultController");
-
-                configuration.add(map);
+            
                 
             }
        

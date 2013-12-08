@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Listeners;
+package WrenchDb.Web.CentralAdmin.Listeners;
 
 import WrenchDb.DAL.Annotations.EventListenerAnnotation;
 import WrenchDb.DAL.Configuration.EventListener;

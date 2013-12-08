@@ -1,3 +1,5 @@
+package WrenchDb.Web.Defaults.Resources;
+
 /* 
  * Copyright (C) 2013 Daniele Fontani
  *

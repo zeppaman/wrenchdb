@@ -1,3 +1,5 @@
+package WrenchDb.Web.CentralAdmin.Crud;
+
 /* 
  * Copyright (C) 2013 Daniele Fontani
  *

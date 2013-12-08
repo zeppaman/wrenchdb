@@ -1,3 +1,5 @@
+package WrenchDb.Web.Defaults.Controllers;
+
 /* 
  * Copyright (C) 2013 Daniele Fontani
  *

@@ -1,3 +1,5 @@
+package WrenchDb.Web.Defaults.Resources;
+
 /* 
  * Copyright (C) 2013 Daniele Fontani
  *
@@ -17,23 +19,26 @@
 import WrenchDb.Core.Annotations.ItemAppenderConfigurator;
 import WrenchDb.Core.Configuration.ItemAppendingConfiguration;
 import WrenchDb.DAL.Helpers.WdbApplicationSettings;
+import WrenchDb.MVC.BaseClasses.CssReference;
 import WrenchDb.MVC.BaseClasses.JSReference;
+import WrenchDb.MVC.BaseClasses.LinkReference;
 import WrenchDb.MVC.BaseClasses.RoutingConfiguration;
 import WrenchDb.MVC.BaseClasses.ScriptReference;
 import WrenchDb.MVC.Configuration.RouteMap;
+import WrenchDb.MVC.Context.WdbAppContext;
 import java.util.ArrayList;
 
-@ItemAppenderConfigurator(Name = "ScriptSet")
-public class ScriptConfiguration 
-    extends  ItemAppendingConfiguration<ScriptReference> {
+@ItemAppenderConfigurator(Name = "LinkSet")
+public class LinkConfiguration 
+    extends  ItemAppendingConfiguration<LinkReference> {
 
             @Override
-            public void Configure(ArrayList<ScriptReference> configuration)
+            public void Configure(ArrayList<LinkReference> configuration)
             {
-                JSReference jre= new JSReference();
-                jre.Src=WdbApplicationSettings.Current().getProperty("serverletContextPath")+"/wro/WdbCa.js";
-                configuration.add(jre);
-                
+                CssReference css= new CssReference();
+                css.href= WdbApplicationSettings.Current().getProperty("serverletContextPath") +"/wro/WdbCa.css";
+                configuration.add(css);
+              
             }
        
     }
