@@ -1,0 +1,125 @@
+<h1>Application Detail</h1> 
+#set ($app=$Model.getProperties().get("application"))
+#set ($rels=$Model.getProperties().get("releases"))
+#set ($dbchanges=$Model.getProperties().get("dbchanges"))
+
+
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">Panel heading</div>
+
+  <!-- Table -->
+  <table class="table">
+    <tr>
+        <td>Nome</td>
+        <td>$app.getApplicationName()</td>
+    </tr>
+
+    <tr>
+        <td>HostName</td>
+        <td>$app.getApplicationHostname()</td>
+    </tr>
+     <tr>
+        <td colspan="2">
+       
+        <a href="/WrenchDb.CentralAdmin.Web/ReleaseController/addRelease/$app.getApplicationId()" class="btn btn-info"  >Add Release</a>
+     </td>
+    </tr>
+  </table>
+</div>
+
+
+<ul class="nav nav-tabs">
+  <li><a href="#releases" data-toggle="tab">Releases</a></li>
+  <li><a href="#changes" data-toggle="tab">Database Changes</a></li>
+  <li><a href="#messages" data-toggle="tab">Code</a></li>
+  <li><a href="#settings" data-toggle="tab">Settings</a></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane active" id="releases">
+
+
+            <h3>Releases</h3>
+
+
+            <table class="table table-bordered">
+            <tr>
+            <td>#</td>
+            <td>Version</td>
+            <td>FullVersion</td>
+            <td>MemoCode</td>
+            <td>Database Version</td>
+            <td>Relased On</td>
+            <td>Actions</td>
+            </tr>
+            #foreach( $rel in $rels )
+               <tr>
+            <td>
+                     $rel.getWdbReleaseId()
+              </td>
+             <td>
+                     $rel.getReleaseVersion()
+              </td>
+            <td>
+                     $rel.getReleaseFullversion()
+            </td>
+            <td>
+                     $rel.getReleaseMemocode()
+            </td>
+            <td>
+                     $rel.getDatabaseVersion()
+            </td>
+            <td>
+                     $rel.getReleasedOn()
+            </td>
+            <td>
+                    <a href="/WrenchDb.CentralAdmin.Web/ReleaseController/Release/$rel.getWdbReleaseId()" class="btn btn-success"  >Info</a>
+                    <a href="/WrenchDb.CentralAdmin.Web/ReleaseController/Deploy/$rel.getWdbReleaseId()" class="btn btn-warning" >Deploy</a>
+            </td>
+             </tr>
+            #end
+            </table>
+    </div>
+    <div class="tab-pane" id="changes">
+
+
+            <h3>Db Changes</h3>
+
+
+            <table class="table table-bordered">
+            <tr>
+            <td>#</td>
+            <td>Version</td>
+            <td>Description</td>
+            <td>Deployed</td>
+            <td>Actions</td>
+            </tr>
+            #foreach( $dbchange in $dbchanges )
+               <tr>
+            <td>
+                     $dbchange.getChangescriptId()
+              </td>
+                <td>
+                     $dbchange.getScriptSource()
+              </td>
+             <td>
+                     $dbchange.getChangescriptDesc()
+              </td>
+            <td>
+                     $dbchange.isIsDeployed()
+            </td>
+            <td>
+                    <a href="/WrenchDb.CentralAdmin.Web/ReleaseController/???/$dbchange.getChangescriptId()" class="btn btn-success"  >Info</a>
+            </td>
+             </tr>
+            #end
+            </table>
+
+    </div>
+    <div class="tab-pane" id="messages">
+    </div>
+    <div class="tab-pane" id="settings">
+    </div>
+</div>

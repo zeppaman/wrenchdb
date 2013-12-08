@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+    <servlet>
+        <servlet-name>routing-engine</servlet-name>
+        <servlet-class>WrenchDb.MVC.Servelets.MVCRoutingServlet</servlet-class>
+    </servlet>   
+    
+    <servlet>
+        <servlet-name>jqgrid-datahandler</servlet-name>
+        <servlet-class>WrenchDb.Data.Servlets.WdbDataSourceServlet</servlet-class>
+    </servlet>  
+    
+   
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    
+    <welcome-file-list>
+        <welcome-file>/</welcome-file>
+    </welcome-file-list>
+    
+    
+    <filter>
+     <filter-name>WebResourceOptimizer</filter-name>
+     <filter-class>
+       ro.isdc.wro.http.WroFilter
+     </filter-class>
+     
+   
+   </filter>
+
+
+
+    
+   <filter-mapping>
+     <filter-name>WebResourceOptimizer</filter-name>
+     <url-pattern>/wro/*</url-pattern>
+     <init-param>
+      <param-name>managerFactoryClassName</param-name>
+      <param-value>WrenchDb.Resources.Configuration.WdbWroManagerFactory</param-value>
+    </init-param>
+   </filter-mapping>
+   
+   
+   <servlet-mapping>
+        <servlet-name>jqgrid-datahandler</servlet-name>
+       <url-pattern>/handlers/datahandler</url-pattern>
+   </servlet-mapping>
+   
+   <servlet-mapping>
+        <servlet-name>routing-engine</servlet-name>
+       <url-pattern>/*</url-pattern>
+   </servlet-mapping>
+   
+        <listener>
+		<listener-class>ApplicationEvents</listener-class>
+	</listener>
+   
+</web-app>

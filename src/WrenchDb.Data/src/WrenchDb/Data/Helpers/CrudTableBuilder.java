@@ -16,6 +16,7 @@
  */
 package WrenchDb.Data.Helpers;
 
+import WrenchDb.DAL.Helpers.WdbApplicationSettings;
 import WrenchDb.Data.Enums.JqGridFieldType;
 import WrenchDb.Data.Enums.SqlDataTypes;
 import WrenchDb.Data.Enums.SqlOrderDirection;
@@ -50,8 +51,8 @@ public class CrudTableBuilder {
         ct.InstanceId=InstanceId;
         ct.Title=Title;
         ct.TableName=TableName;
-        ct.DataUrl="/WrenchDb.CentralAdmin/handlers/datahandler?ctable="+InstanceId;
-        ct.EditUrl="/WrenchDb.CentralAdmin/handlers/datahandler?mode=edit&ctable="+InstanceId;
+        ct.DataUrl= WdbApplicationSettings.Current().getProperty("serverletContextPath") +"/handlers/datahandler?ctable="+InstanceId;
+        ct.EditUrl=WdbApplicationSettings.Current().getProperty("serverletContextPath") +"/handlers/datahandler?mode=edit&ctable="+InstanceId;
         ct.error="function (xHR, status, err) { \n\nalert(\"ERROR: \" + status + \", \" + err);}";
         
     }
@@ -319,8 +320,8 @@ public class CrudTableBuilder {
     {
         CrudTableColumn ctc=this.ct.Columns.getByName(ColumnName);
         String DataUrl=String.format(
-                "/WrenchDb.CentralAdmin/handlers/datahandler?ext_table=%s&ext_id=%s&ext_label=%s&ctable=%s&renderas=select&addnull=true&mode=lookup",
-                ctc.LookupTable,ctc.LookupId,ctc.LookupDesc,this.ct.TableName);
+                "%s/handlers/datahandler?ext_table=%s&ext_id=%s&ext_label=%s&ctable=%s&renderas=select&addnull=true&mode=lookup",
+                WdbApplicationSettings.Current().getProperty("serverletContextPath"),ctc.LookupTable,ctc.LookupId,ctc.LookupDesc,this.ct.TableName);
         
         return  EditColumn(
                  ColumnName,

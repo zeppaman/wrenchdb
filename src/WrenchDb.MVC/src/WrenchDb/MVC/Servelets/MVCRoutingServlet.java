@@ -56,7 +56,7 @@ public class MVCRoutingServlet extends HttpServlet {
         try {
             super.service(req, resp); 
 
-            String url = req.getRequestURI();
+            String url = req.getPathInfo();
             //resp.getWriter().print(url);
             RuleMatchingResult result = WdbAppContext.Current().GetRouteResult(url);
             RequestModel m = RequestModel.CreateRequestModel(result.ModelData, req);
