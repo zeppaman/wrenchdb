@@ -216,6 +216,7 @@ extends HttpServlet {
        
       
         
+       Logger.getLogger("WrenchDb.SQL").log(Level.INFO, sql);
        List l= HContext
             .Current()
             .ExecuteSelectQuery(sql);
@@ -231,6 +232,7 @@ extends HttpServlet {
         }
         catch(Exception err)
         {
+            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "doList",err);
             resp.setStatus(500);            
             resp.getWriter().append(err.getMessage());
             resp.sendError(500, err.getMessage());
@@ -287,7 +289,7 @@ extends HttpServlet {
        if(! cancel)
        {
           int rows=HContext.Current().ExecuteNoResult(db.toString());
-           if(rows<1)
+         if(rows<0)
          {
              throw new Exception("Unable to perform delete operation. see log for more information.");
          }
@@ -338,7 +340,7 @@ extends HttpServlet {
        sb.From(req.getParameter("ext_table"));
        sb.OrderBy(req.getParameter("ext_label"));
        
-   
+    
        List l= HContext
             .Current()
             .ExecuteSelectQuery(sb.toString());

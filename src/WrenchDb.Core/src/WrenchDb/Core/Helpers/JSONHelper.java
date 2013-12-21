@@ -22,7 +22,7 @@ public class JSONHelper {
          .replace("\n", "\\n")
           .replace("\r", "\\r")
           .replace("\t", "\\t")
-                .replace("'", "\\'")
+               // .replace("'", "\\'") 
                 .replace("\b", "\\b");
     }
     public static String ConvertBaseType(Object Value)

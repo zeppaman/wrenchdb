@@ -34,6 +34,7 @@
         
          <!-- set default CA settings values -->
          <delete file="${wdb.settings}" />
+          <echo message="hibernate.connection.driver_class=org.postgresql.Driver${line.separator}" append="true" output="${wdb.settings}" />
          <echo message="hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect${line.separator}" append="true" output="${wdb.settings}" />
          <echo message="hibernate.connection.url=?? set your value here ??${line.separator}" append="true" output="${wdb.settings}" />
          <echo message=" hibernate.connection.username=?? set your value here ??${line.separator}"  append="true" output="${wdb.settings}" />

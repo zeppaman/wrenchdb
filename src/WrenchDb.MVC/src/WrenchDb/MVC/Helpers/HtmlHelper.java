@@ -165,7 +165,7 @@ public class HtmlHelper {
             catch( Exception err )
             {  
                 
-               Logger.getLogger(HtmlHelper.class.getName()).log(Level.SEVERE, "Example : error : UNABLE TO FIND template  OR ERRROR: FALLBACK TO DEFAULT EQUIVALENT" + templateFile, err);
+               Logger.getLogger(HtmlHelper.class.getName()).log(Level.INFO, "Example : error : UNABLE TO FIND template  OR ERRROR: FALLBACK TO DEFAULT EQUIVALENT" + templateFile);
             }
            return null;
     }
