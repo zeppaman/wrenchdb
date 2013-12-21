@@ -19,13 +19,18 @@ package Wrench.Db.Tests;
 import Wrench.Db.Tests.Helpers.Utils;
 import WrenchDb.DAL.Entities.WdbApplication;
 import WrenchDb.DAL.Helpers.HContext;
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.ws.spi.http.HttpContext;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectHelper;
 import org.hibernate.Session;
+import org.hibernate.tool.hbm2x.POJOExporter;
+import org.hibernate.tool.hbm2x.TemplateHelper;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -82,5 +87,24 @@ public class DALTests {
      
     }
     
+    @Test
+    public void ExportPojos()
+    {
+         Utils.InitHContext();
+        POJOExporter expo= new POJOExporter(HContext.Current().getConfiguration(), new File("C:\\temp\\"));
+        expo.start();
+    }
+    
+    public void GenAnt()
+    {
+        File buildFile = new File("build.xml");
+        Project p = new Project();
+        p.setUserProperty("ant.file", buildFile.getAbsolutePath());
+        p.init();
+        ProjectHelper helper = ProjectHelper.getProjectHelper();
+        p.addReference("ant.projectHelper", helper);
+        helper.parse(p, buildFile);
+        p.executeTarget(p.getDefaultTarget());
+    }
     
 }

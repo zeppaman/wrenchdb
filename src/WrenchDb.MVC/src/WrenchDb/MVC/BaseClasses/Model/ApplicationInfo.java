@@ -6,6 +6,8 @@ package WrenchDb.MVC.BaseClasses.Model;
 
 import WrenchDb.Core.Helpers.PathHelper;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -34,16 +36,17 @@ public abstract class ApplicationInfo {
     {
         try
         {
-        String url = this.getClass().getResource("").getPath();
-        int idx=url.lastIndexOf(getClassPathRoot());
-        String basePath=url.substring(0,idx);
-        basePath=PathHelper.combine(basePath,getCustomWebPath());
-        String wdbcustom=PathHelper.combine(webInf,"wdb","custom");
-        PathHelper.copyFolder(basePath, wdbcustom);
+            String url = this.getClass().getResource("").getPath();
+            int idx=url.lastIndexOf(getClassPathRoot());
+            String basePath=url.substring(0,idx);
+            basePath=PathHelper.combine(basePath,getCustomWebPath());
+            String wdbcustom=PathHelper.combine(webInf,"wdb","custom");
+            //TODO: delete wdbcustom folder
+            PathHelper.copyFolder(basePath, wdbcustom);
         }
         catch(Exception ex)
         {
-            
+            Logger.getLogger(ApplicationInfo.class.getName()).log(Level.SEVERE,"CopyToWeb",ex);
         }
         
     }

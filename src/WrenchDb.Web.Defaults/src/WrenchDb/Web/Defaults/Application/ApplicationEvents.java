@@ -46,6 +46,14 @@ public class ApplicationEvents implements ServletContextListener{
         
         WdbApplicationSettings.Current().put("serverletContextPath", sce.getServletContext().getContextPath());
         WdbApplicationSettings.Current().put("webBase", webBase);
+        //Make repoRoot absolute path
+        String repoRoot=WdbApplicationSettings.Current().getProperty("repoRoot");
+        if(repoRoot!=null && !repoRoot.startsWith("/"))
+        {
+            WdbApplicationSettings.Current()
+                    .setProperty("repoRoot", 
+                    sce.getServletContext().getRealPath(repoRoot));
+        }
         
         
         CrudTableSet cs= new CrudTableSet();

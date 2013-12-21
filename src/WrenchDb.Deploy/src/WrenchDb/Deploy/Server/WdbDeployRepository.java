@@ -7,6 +7,7 @@ package WrenchDb.Deploy.Server;
 import WrenchDb.Core.Helpers.ArchiveUnZipper;
 import WrenchDb.Core.Helpers.ArchiveZipper;
 import WrenchDb.Core.Helpers.PathHelper;
+import WrenchDb.Core.Helpers.WdbStringHelper;
 import WrenchDb.DAL.Entities.*;
 import WrenchDb.DAL.Helpers.HContext;
 import WrenchDb.Deploy.Model.JarPackage;
@@ -15,7 +16,9 @@ import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.Properties;
 import java.util.UUID;
+import org.hibernate.Session;
 
 /**
  *
@@ -34,7 +37,7 @@ public class WdbDeployRepository
     {
         // /wdb_version/templates/empty.war
         //TODO: do fallback from configuration to default;
-        return  PathHelper.combine(rootPath,"/1.0/templates/empty.war");
+        return  PathHelper.combine(rootPath,"/1.0/templates/WrenchDb.Empty.Web.war");
     }
     
     public String getReleaseJarPath(long releaseId)
@@ -100,6 +103,10 @@ public class WdbDeployRepository
         String warUritmpl=getEmptyWarTemplate();
         String tmpUri=getReleaseTempPath(releaseId);
         
+         WdbRelease release= getCachedRelease(releaseId);
+         //get last definition for application( release is cached);
+         WdbApplication app= HContext.Current().Get(WdbApplication.class, release.getWdbApplication().getApplicationId());
+        
        //if file jar not existes throw exception
         if(!PathHelper.exists(jarUri)) throw new Exception("Unable to find JAR linked to this release.");
         // extract template path into temp path
@@ -110,6 +117,12 @@ public class WdbDeployRepository
         
         if(PathHelper.copy(jarUri,PathHelper.combine(tmpUri, "WEB-INF/lib/",PathHelper.getFileName(jarUri))))
         {
+            //TODO:Alter Context file
+            PathHelper.writeTextFile(PathHelper.combine(tmpUri, "META-INF/context.xml"),
+                    this.getContextXmlContent(app.getApplicationName()));
+            //TODO: Create wdb_db.properties
+             PathHelper.writePropertyFile(PathHelper.combine(tmpUri, "WEB-INF/wdb_db.properties"),
+                    this.getPropertiesFile(app.getApplicationId()));
             //compress file to temp folder
             ArchiveZipper zip= new ArchiveZipper(destUri,tmpUri);
             zip.zip();
@@ -144,4 +157,37 @@ public class WdbDeployRepository
         
        return PathHelper.combine( getUploadTempDir(), UUID.randomUUID().toString()+".jar");
     }
+    
+    public String getContextXmlContent(String applicatioName)
+    {
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+        "<Context antiJARLocking=\"true\" path=\"/"+getSafeApplicationName(applicatioName)+"\"/>";
+    }
+      public String getSafeApplicationName(String applicatioName)
+    {
+        if(applicatioName!=null && applicatioName.length()>0)
+        {
+            return applicatioName.replaceAll("[^a-zA-Z0-9_\\-.]", "_");
+        }
+        return null;
+    }
+    public Properties getPropertiesFile(long appId)
+    {
+        Session s= HContext.Current().getSessionFactory().openSession();
+        WdbApplication app= HContext.Current().Get(WdbApplication.class, appId);
+        Properties p= new Properties();
+        //p.setProperty("", app.getWdbDatabasetype().);
+        
+        p.setProperty("hibernate.dialect","org.hibernate.dialect.PostgreSQLDialect");
+        p.setProperty("hibernate.connection.driver_class","org.postgresql.Driver");
+        p.setProperty("hibernate.connection.url",app.getDatabaseJdbc());
+        p.setProperty("hibernate.connection.username",app.getDatabaseUsername());
+        p.setProperty("hibernate.connection.password",app.getDatabasePassword());
+        //p.setProperty("wdb.entitypackages","WrenchDb.DAL.Entities"); //TODO: custom DAL
+        p.setProperty("application_id",String.valueOf(appId));
+        s.close();
+        
+        return p;
+              
+   }
 }

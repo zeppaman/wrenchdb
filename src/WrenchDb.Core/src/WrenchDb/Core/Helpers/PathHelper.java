@@ -8,10 +8,12 @@ import com.google.common.io.Files;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Path;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -170,5 +172,35 @@ public class PathHelper {
     	        out.close();
     	       
     	}
+    }
+
+    public static boolean writeTextFile(String path, String content) {
+        try
+        {
+        if(content==null)
+            content="";    
+        
+        Files.write(content.getBytes(),new File(path));
+        
+        return true;
+        }
+        catch(Exception err)
+        {
+            //TODO: log here.
+        }
+        return false;
+    }
+
+    public static boolean writePropertyFile(String path, Properties propertiesFile) {
+      try
+      {
+        propertiesFile.store(new FileWriter(path), null);
+        return true;
+         }
+        catch(Exception err)
+        {
+            //TODO: log here.
+        }
+      return false;
     }
 }

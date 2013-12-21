@@ -5,7 +5,6 @@
 package WrenchDb.Deploy.Server.Impl;
 
 import WrenchDb.Deploy.Model.IFileDeployItem;
-import WrenchDb.Deploy.Server.WdbDeployRepository;
 import WrenchDb.Deploy.Server.WdbServerDeployer;
 import org.codehaus.cargo.container.ContainerType;
 import org.codehaus.cargo.container.InstalledLocalContainer;
@@ -54,6 +53,10 @@ extends WdbServerDeployer
         
             
        Deployer deployer = new TomcatCopyingInstalledLocalDeployer(container);
+       
+       // XmlReplacement replacement= new XmlReplacement();
+       // replacement
+                
        
        deployer.deploy(war);
         return true;

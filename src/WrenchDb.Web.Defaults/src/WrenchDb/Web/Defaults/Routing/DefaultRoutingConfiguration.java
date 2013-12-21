@@ -37,6 +37,13 @@ public class DefaultRoutingConfiguration
 
                 configuration.add(map);
                 
+                map=  new RouteMap();
+                map.setName("DefaultController");
+                map.setUrl("/");
+                map.setDefaultActionName("Index");
+                map.setDefaultControllerName("DefaultController");
+
+                configuration.add(map);
                 
                 
             
