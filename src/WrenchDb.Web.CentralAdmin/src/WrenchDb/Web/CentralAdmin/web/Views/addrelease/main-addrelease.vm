@@ -1,8 +1,9 @@
-
+#set ($application=$Model.getProperties().get("application"))
 
 <h1>Add new release</h1>
 
-<form method="POST"  enctype="multipart/form-data" action="/WrenchDb.CentralAdmin.Web/ReleaseController/Release/24" >
+<form method="POST"  enctype="multipart/form-data" 
+action="/WrenchDb.CentralAdmin.Web/ReleaseController/Release/$application.getApplicationId()" >
             File:
             <input type="file" name="file" id="file" /> <br/>
            

@@ -19,6 +19,7 @@ public class JSONHelper {
     {
         
        return s.replace("\"", "\\\"")
+          .replace("\\", "\\\\")
          .replace("\n", "\\n")
           .replace("\r", "\\r")
           .replace("\t", "\\t")

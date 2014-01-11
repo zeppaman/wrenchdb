@@ -64,8 +64,10 @@ public class ReflectionHelper {
         }
         catch(Exception err)
         {
+             Logger.getLogger(ReflectionHelper.class.getName())
+                      .log(Level.INFO, "Unable to load class "+classname);
               Logger.getLogger(ReflectionHelper.class.getName())
-                      .log(Level.SEVERE, "",err);
+                      .log(Level.SEVERE,  "Unable to load class "+classname,err);
         }
         return null;
     }

@@ -80,6 +80,7 @@ public class WdbApplicationSettings extends Properties {
         {
          
          Long applicationId=Long.parseLong(settings.getProperty("application_id") );
+         
          List<WdbSettings> _items;
           sess= HContext.Current().getSessionFactory()
                         .openSession();
@@ -124,7 +125,14 @@ public class WdbApplicationSettings extends Properties {
         {
             if(trans!=null)
             trans.rollback();
-            Logger.getLogger(WdbApplicationSettings.class.getName()).log(Level.SEVERE,"",er);
+            Logger.getLogger(WdbApplicationSettings.class.getName()).log(Level.SEVERE,"ERROR DURING APPLICATION SETTINGS INIT",er);
+            if(settings==null)
+            {
+                Logger.getLogger(WdbApplicationSettings.class.getName()).log(Level.INFO,  "settings==NULL");
+            }else
+            {
+           //Logger.getLogger(WdbApplicationSettings.class.getName()).log(Level.INFO,  settings.store(null, null)
+                    }
         }
         finally
         {

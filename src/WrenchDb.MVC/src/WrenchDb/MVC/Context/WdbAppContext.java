@@ -39,6 +39,7 @@ public class WdbAppContext {
         {
             _current= new WdbAppContext();
             _current.Init();
+            
         }
         return _current;
     }

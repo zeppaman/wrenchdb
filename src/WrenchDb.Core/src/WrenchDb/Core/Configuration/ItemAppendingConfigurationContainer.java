@@ -112,6 +112,18 @@ public abstract class ItemAppendingConfigurationContainer<ObjectType> {
            
         }
         _inited=true;
+        
+        
+        //Log loaded data
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO,"INITED ItemAppendingConfigurationContainer" +this.getClass().getName());
+        if(this.items==null)
+        { 
+            Logger.getLogger(this.getClass().getName()).log(Level.INFO,"INITED ItemAppendingConfigurationContainer =>NULL ITEMS");
+        }
+        else
+        {
+            Logger.getLogger(this.getClass().getName()).log(Level.INFO,"INITED ItemAppendingConfigurationContainer =>"+this.items.size());
+        }
     }
     
 }

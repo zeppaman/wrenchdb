@@ -58,6 +58,10 @@ public class ReleaseController extends ControllerBase {
                 "addrelease",
                 "OneColumn", 
                 new ModelBase());
+    long application_id=Long.parseLong(model.get("id"));
+     WdbApplication application= HContext.Current().Get(WdbApplication.class, application_id);
+            
+             r.Model.getProperties().put("application", application);
     return r;
   }
     @Action
@@ -79,6 +83,7 @@ public class ReleaseController extends ControllerBase {
         {
              long releaseId=Long.parseLong(rm.get("id"));
              WdbRelease rel= HContext.Current().Get(WdbRelease.class, releaseId);
+            
              r.Model.getProperties().put("release", rel);
              
         }

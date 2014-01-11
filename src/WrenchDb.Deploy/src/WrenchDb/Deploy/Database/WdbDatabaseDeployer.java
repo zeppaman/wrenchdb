@@ -43,8 +43,20 @@ public abstract class  WdbDatabaseDeployer {
         {
             s=HContext.Current().getSessionFactory().openSession();
             WdbApplication application =(WdbApplication)s.get(WdbApplication.class, applicationId);
+            if(application==null)
+            {
+                throw new Exception("application NULL : unable to find application for deploy (using application id="+applicationId);
+            }
             WdbDatabasetype type=application.getWdbDatabasetype();
-            String classname=type.getDatabasetypeDeployer();
+            if(type==null)
+            {
+                throw new Exception("application.getWdbDatabasetype NULL : unable to find database deployer");
+            }
+            String classname=type.getDatabasetypeDeployer().trim();
+            
+            Logger.getLogger(WdbServerDeployer.class.getName())
+                      .log(Level.SEVERE, "USE DATABASE DEPLOYER classname:"+classname);
+            
             WdbDatabaseDeployer app= ReflectionHelper.getNewInstance(classname);
             app.application=application;         
             return app;
@@ -122,6 +134,8 @@ public abstract class  WdbDatabaseDeployer {
     
     public void DeployPendingChanges()
     {
+        try
+        {
         Session s=HContext.Current().getSessionFactory().openSession();
         List<WdbChangescript> changes=     s
                 .createCriteria(WdbChangescript.class)
@@ -129,10 +143,10 @@ public abstract class  WdbDatabaseDeployer {
                 Restrictions
                     .and(
                         Restrictions .eq("wdbApplication.applicationId",this.application.getApplicationId()),
-                        Restrictions .eq("isDeployed","false")
+                        Restrictions .eq("isDeployed",false)
                         )
                 )
-                .addOrder(Order.asc("wdbReleaseId")).list();
+                .addOrder(Order.asc("changescriptId")).list();
         StringBuilder sb=new StringBuilder();
         
         for(WdbChangescript c : changes)
@@ -140,7 +154,9 @@ public abstract class  WdbDatabaseDeployer {
             sb.append(c.getChangescriptSql());
         }
         s.close();
-        //PUT on database type defaut dialect and driver
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO,"Deplong database update:"
+                + application.getDatabaseJdbc() +" "+ application.getDatabaseUsername(), 
+               application.getServerPassword()+"\n\n"+sb.toString());
        HContext externalDbCOntext= HContext
                .createContext("org.hibernate.dialect.PostgreSQLDialect", "org.postgresql.Driver",
                application.getDatabaseJdbc(), application.getDatabaseUsername(), 
@@ -148,6 +164,10 @@ public abstract class  WdbDatabaseDeployer {
        
        externalDbCOntext
                .ExecuteNoResult(sb.toString());
-                
+        }
+        catch(Exception err)
+        {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,"ERROR DEPLOYNG DATABASE CHANGES",err);
+        }
     }
 }

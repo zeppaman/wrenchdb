@@ -71,7 +71,15 @@ public class WdbPageManager {
       _renderer.Clear();
        for(LinkReference s:  css )
        {
-          s.RenderAsHtml(_renderer); 
+           if(s==null)
+           {
+               Logger.getGlobal().info("Found null css reference");
+           }
+           else
+           {
+               Logger.getGlobal().info("Render css"+s.href);
+              s.RenderAsHtml(_renderer); 
+           }
        }
        return _renderer.GetHtml();
     }
