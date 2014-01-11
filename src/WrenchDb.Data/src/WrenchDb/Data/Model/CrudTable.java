@@ -26,7 +26,6 @@ import WrenchDb.Data.Enums.SqlOrderDirection;
 import WrenchDb.Data.Enums.jqGridEditType;
 import WrenchDb.Data.Model.Enums.*;
 import WrenchDb.Data.Model.Lists.CrudColumnList;
-import WrenchDb.MVC.BaseClasses.Model.ModelBase;
 import java.util.ArrayList;
 import java.util.List;
 

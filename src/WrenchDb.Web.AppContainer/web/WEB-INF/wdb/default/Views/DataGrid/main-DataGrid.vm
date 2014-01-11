@@ -1,0 +1,21 @@
+<h1>$Model.get("title")</h1>
+
+
+
+<!--
+    #set ($map = $Model.getProperties() )
+        #foreach ($mapEntry in $map.entrySet())
+           <tr><td>$mapEntry.key</td>
+            <td><value>$mapEntry.value</td></tr>
+        #end
+-->
+
+#set ($table=$Model.getProperties().get("ctable"))
+#if (!$table)
+   <h3>table NULL </h3>
+#end
+
+
+#if ($table)  
+  $table.GetHtml()
+#end
