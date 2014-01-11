@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- put this file in the same folder of  custom project zip template -->
+<project>
+    <target name="Create">
+        <echoproperties destfile="BuildEmptyProject.properties" />
+	    <input
+		message="Project Name?"
+		addproperty="projectname"
+        />
+        <echo message="${projectname}" />
+        <unzip dest="${projectname}"  src="EmptyProjectTemplate.zip">
+		   <patternset>
+			<exclude name="**/*.class" />
+		    </patternset>
+		</unzip>
+        
+        
+        
+        <!--<move tofile="${projectname}/WrenchDb.Web.${projectname}"  file="${projectname}/WrenchDb.Web.ProjectTemplate"  verbose="true" />-->
+        <move tofile="${projectname}/src/WrenchDb/Web/${projectname}/"  file="${projectname}/src/WrenchDb/Web/ProjectTemplate"  verbose="true" />
+        
+        <move todir="${projectname}" includeemptydirs="false">
+            <fileset dir="${projectname}" >
+                <include name="**/*.*"/>
+            </fileset>
+            <mapper type="regexp" from="^(.*)ProjectTemplate(.*)$$" to="\1${projectname}\2"/>
+        </move>
+        
+        <replace dir="${projectname}" token="ProjectTemplate" value="${projectname}" casesensitive="false" >
+        </replace>
+        
+        <echo message="End Code Generation" />
+    </target>
+</project>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project  basedir=".." default="default" name="WrenchDb.Releases-impl">
+    <target name="BuildProjectTemplate">
+       <tstamp>
+            <format property="releasenumber" pattern="yyyyMMdd"/>
+        </tstamp>
+        
+        <property name="wdb.base" value="${basedir}/releases/archive/${releasenumber}"/>
+        <property name="wdb.templatedir" value="${basedir}/releases/templates/"/>
+        <property name="wdb.webname" value="WrenchDb.Web.ProjectTemplate.jar"/>
+        <property name="wdb.tmpfolder" value="${wdb.base}/_tmp_empty_pt"/>
+        <property name="wdb.destfile" value="${wdb.base}/EmptyProjectTemplate.zip"/>
+        
+        
+        
+        
+        <unzip src="${basedir}/dist/${wdb.webname}"
+              dest="${wdb.tmpfolder}/zip/src">
+            <patternset>
+                 <include name="**/*.*"/>
+                 <exclude name="**/*.class"/>
+             </patternset>
+        </unzip>
+        
+        <copy   todir="${wdb.tmpfolder}/zip" >
+            <fileset dir="${wdb.templatedir}/ProjectTemplateZip/" />
+        </copy>
+        
+        
+        <copy   todir="${wdb.tmpfolder}/zip/libs" >
+            <fileset dir="${basedir}/dist/">
+                <include name="*.jar"/>
+                <exclude name="*CentralAdmin*"/>
+                <exclude name="*Template*"/>
+            </fileset>
+        </copy>
+        
+        <zip   basedir="${wdb.tmpfolder}/zip"      destfile="${wdb.tmpfolder}/EmptyProjectTemplate.zip">
+             <patternset>
+                 <include name="**/*.*"/>
+             </patternset>
+         </zip>
+         
+        <delete dir="${wdb.tmpfolder}/zip"/>
+        
+        <copy file="${wdb.templatedir}/ProjectTemplate-CreateBuild.xml"
+              tofile="${wdb.tmpfolder}/Build.xml">
+        </copy>
+        
+        <copy file="${wdb.templatedir}/ProjectTemplate-readme.txt"
+              tofile="${wdb.tmpfolder}/readme.txt">
+        </copy>
+        
+        
+         <zip   basedir="${wdb.tmpfolder}"      destfile="${wdb.destfile}">
+             <patternset>
+                 <include name="**/*.*"/>
+             </patternset>
+         </zip>
+         <delete dir="${wdb.tmpfolder}"/>
+    </target>
+</project>
+

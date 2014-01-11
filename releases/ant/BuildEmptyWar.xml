@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project  basedir=".." default="default" name="WrenchDb.Releases-impl">
+    <target name="BuildEmptyWar">
+       
+        <property name="wdb.webname" value="WrenchDb.Web.AppContainer.war"/>
+        <tstamp>
+            <format property="releasenumber" pattern="yyyyMMdd"/>
+        </tstamp>
+        <property name="wdb.base" value="${basedir}/releases/archive/${releasenumber}"/>
+        <property name="wdb.tmpfolder" value="${wdb.base}/_tmp_empty"/>
+        <property name="wdb.templatewar" value="${wdb.base}/WrenchDb.Empty.Web.war"/>
+        <property name="wdb.settings" value="${wdb.tmpfolder}/WEB-INF/wdb_db.properties" />   
+        <property name="wdb.contextxml" value="${wdb.tmpfolder}/META-INF/context.xml" />   
+                
+        <mkdir dir="${wdb.tmpfolder}"/>
+        <delete dir="${wdb.tmpfolder}"/>
+        
+        <unwar src="${basedir}/dist/${wdb.webname}"
+                dest="${wdb.tmpfolder}">
+             <patternset>
+                 <include name="**/*.*"/>
+                 <exclude name="**/WrenchDb.Web.CentralAdmin.jar"/>
+                  <exclude name="**/wdb_db.properties"/>
+                  <exclude name="**/context.xml"/>
+             </patternset>
+         </unwar>
+          
+          <!-- remove files (will be produced durting ca deploy process) -->
+         <delete file="${wdb.settings}" />
+         <delete file="${wdb.contextxml}" />
+         
+         <zip   basedir="${wdb.tmpfolder}"      destfile="${wdb.templatewar}">
+             <patternset>
+                 <include name="**/*.*"/>
+             </patternset>
+         </zip>
+         <delete dir="${wdb.tmpfolder}"/>
+    </target>
+</project>
+
